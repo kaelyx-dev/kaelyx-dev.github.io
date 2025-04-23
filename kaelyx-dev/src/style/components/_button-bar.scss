@@ -1,0 +1,13 @@
+@use "../variables/spacing";
+
+#button-bar {
+    padding: spacing.spacing('large') spacing.spacing('large');
+    ul {
+        list-style: none;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: start;
+        gap: spacing.spacing('medium');
+    }
+}

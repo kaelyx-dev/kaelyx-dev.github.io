@@ -1,0 +1,7 @@
+@use "../variables/spacing";
+
+header {
+    display: flex;
+    flex-direction: column;
+    gap: spacing.spacing('medium');
+}

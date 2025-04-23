@@ -1,0 +1,30 @@
+@use "sass:color";
+@use "../variables/colours";
+@use "../variables/spacing";
+
+
+.button {
+    padding: spacing.spacing('tiny') spacing.spacing('medium');
+
+    color: colours.colour("white");
+    text-decoration: none;
+}
+
+@each $name, $value in colours.$coloursMap {
+    .button--#{$name}{
+        display: inline-block;
+        background-color: $value;
+        box-shadow: 2px 2px 0px 0px colours.colour("gray-3");
+
+        &:hover {
+        //   background-color: lighten($value, 10%);
+        background-color: color.adjust($value, $lightness: 10%);
+        }
+
+        &:active {
+            background-color: color.adjust($value, $lightness: -10%);
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px 0px colours.colour("gray-2");
+        }
+    }
+}

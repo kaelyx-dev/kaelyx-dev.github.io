@@ -1,0 +1,20 @@
+/* HTML: <div class="loader"></div> */
+
+.loader__container {
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+}
+
+
+.loader {
+    align-self: last baseline;
+    width: 20px;
+    margin-left: 2px;
+    margin-bottom: 4px;
+    aspect-ratio: 4;
+    background: radial-gradient(circle closest-side,#fff 90%,#fff0) 0/calc(100%/3) 100% space;
+    clip-path: inset(0 100% 0 0);
+    animation: l1 1.5s steps(4) infinite;
+  }
+  @keyframes l1 {to{clip-path: inset(0 -34% 0 0)}}

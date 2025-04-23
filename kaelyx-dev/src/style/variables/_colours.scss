@@ -1,0 +1,46 @@
+@use 'sass:color';
+@use 'sass:map';
+
+$coloursMap: (
+    "black": #000,
+    "white": #fff,
+
+    "gray-1": #444,
+    "gray-2": #666,
+    "gray-3": #888,
+    "gray-4": #aaa,
+    "gray-5": #ccc,
+
+    "red": #ca2d32,
+    "green": #5ca857,
+    "dark-blue": #36228e,
+    "light-blue": #6ba8eb,
+    "yellow": #f8f845,
+    "magenta": #ca008b,
+);
+
+$locations : (
+    "text" : "color",
+    "bg": "background-color",
+    "shadow" : "box-shadow"
+);
+
+@each $name, $value in $coloursMap {
+    @each $location, $val in $locations {
+        .#{$location}--#{$name}{
+            #{$val}: #{$value};
+        }
+    }
+}
+@function colour($k){
+    @return map.get($map: $coloursMap, $key: $k);
+}
+
+
+@each $name, $value in $coloursMap {
+    @each $location, $val in $locations {
+        .button--#{$name}{
+            #{$val}: #{$value};
+        }
+    }
+}

@@ -1,0 +1,7 @@
+@use "../variables/spacing";
+
+.box {
+    border: 2px solid white;
+    padding: spacing.spacing('medium');
+    word-wrap: break-word;
+}

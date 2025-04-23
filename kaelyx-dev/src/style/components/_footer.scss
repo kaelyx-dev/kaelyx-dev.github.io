@@ -1,0 +1,15 @@
+@use "../variables/spacing";
+
+footer {
+    display: flex;
+    gap: spacing.spacing('small');
+    .colours {
+        margin-left: auto;
+        display: flex;
+        flex-direction: row;
+        gap: spacing.spacing('small');
+    }
+    p {
+        align-self: center;
+    }
+}
