@@ -32,9 +32,7 @@ console.log(vnodes)
         <p> {{ config.getConfig }} </p>
       </div>
       <div class="box">
-        <div>
-          <component v-for="(vnode, index) in vnodes" :is="vnode" :key="index" />
-        </div>
+        <component v-for="(vnode, index) in vnodes" :is="vnode" :key="index" />
       </div>
     </main>
     <Footer/>
