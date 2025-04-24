@@ -6,6 +6,8 @@ import Footer from '@core/Footer.vue'
 import Header from '@core/Header.vue'
 import Loader from '@core/Loader.vue'
 
+import parseShortCodes from '@module/shortCode/parseShortCodes'
+
 import setPageTitle from '@utility/setPageTitle'
 
 const config = useConfigStore()
@@ -17,6 +19,8 @@ config.init().then(() => {
 })
 
 setPageTitle(config.getValue("site.title", "KAELYX").toUpperCase())
+
+parseShortCodes()
 
 </script>
 <template>
