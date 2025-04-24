@@ -9,7 +9,7 @@ const placeholderTagName = config.placeholder
 // MD2HTML -> Sanitize -> shortCodes -> vnodeParser
 
 export default text => {
-    text = "This is a string with a {{<helloworld>}} short code within in and a {{<nonexistant>}} shortcode too, or a {{<helloworld with=props>}} or {{<helloworld with=more props=values>}}"
+    if(!text || text.length <= 0) return ""
     let shortCodes = findAllShortCodes(text)
 
     shortCodes.forEach(shortcode => {
@@ -17,13 +17,17 @@ export default text => {
     })
     console.log(text)
     console.log(shortCodes)
-    return text
+    return {
+        text: text,
+        placeholder: placeholderTagName,
+        map : shortCodes
+    }
 }
 
 const regexPattern = () => {
     const s = config.syntax.start
     const e = config.syntax.end
-    return new RegExp(`${regexEscape(s)}\\s*(?<shortcode>[^\\s>]+)(?:\\s+(?<args>[^}]+))?\\s*${regexEscape(e)}`,"g")
+    return new RegExp(`${regexEscape(s)}\\s*(?<shortcode>\\w+)(?<args>(?:\\s+\\w+=\\w+)*)\\s*${regexEscape(e)}`,"g")
 }
 
 const regexEscape = str => {
@@ -46,7 +50,7 @@ const findAllShortCodes = text => {
             })
         } else _props = undefined
         return {
-            sc_id       : _id,
+            id          : _id,
             name        : name,
             code        : e[0],
             props       : _props,
@@ -62,4 +66,4 @@ const generateShortCodeID = val => {
     return `sc_${val}_${Math.random().toString(16).slice(4)}`
 }
 
-const generatePlaceholderNode = id => `<${placeholderTagName} data-id=\"${id}\" />`
+const generatePlaceholderNode = id => `<${placeholderTagName} data-id=\"${id}\"></${placeholderTagName}>`

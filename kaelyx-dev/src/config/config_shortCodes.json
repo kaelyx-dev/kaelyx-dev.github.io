@@ -1,7 +1,7 @@
 {
     "syntax" : {
-        "start" : "{{<",
-        "end"   : ">}}"
+        "start" : "{{",
+        "end"   : "}}"
     },
     "placeholder" : "shortcode-placeholder"
 }
