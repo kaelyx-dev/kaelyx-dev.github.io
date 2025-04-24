@@ -6,7 +6,7 @@ import Footer from '@core/Footer.vue'
 import Header from '@core/Header.vue'
 import Loader from '@core/Loader.vue'
 
-import parseShortCodes from '@module/shortCode/parseShortCodes'
+import generateShortcodeMap from '@module/shortCode/generateShortcodeMap'
 
 import setPageTitle from '@utility/setPageTitle'
 
@@ -20,7 +20,7 @@ config.init().then(() => {
 
 setPageTitle(config.getValue("site.title", "KAELYX").toUpperCase())
 
-parseShortCodes()
+generateShortcodeMap()
 
 </script>
 <template>
