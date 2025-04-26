@@ -15,8 +15,7 @@ export default text => {
     shortCodes.forEach(shortcode => {
         text = text.replace(shortcode.code, shortcode.placeholder)
     })
-    console.log(text)
-    console.log(shortCodes)
+
     return {
         text: text,
         placeholder: placeholderTagName,
