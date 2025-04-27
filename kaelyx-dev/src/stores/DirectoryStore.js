@@ -5,11 +5,13 @@ import { ref } from 'vue'
 export const useDirectoryStore = defineStore('directory', () => {
 
     let pages = ref({})
-    let activeArticleUrl = ref("")
+    let activeContentUrl = ref("")
 
-    const init = async () => {
+    const init = async permalink => {
         let directory = await getDirectoryStructure();
         pages.value = directory
+
+        if(permalink) setActivePage(permalink)
     }
 
     const getDirectory = () => {
@@ -17,9 +19,9 @@ export const useDirectoryStore = defineStore('directory', () => {
     }
 
     const setActivePage = pageLink => {
-        activeArticleUrl.value = pageLink
+        activeContentUrl.value = pageLink
     }
 
-    return { init, getDirectory, pages, activeArticleUrl }
+    return { init, getDirectory, setActivePage, pages, activeContentUrl }
 
 })
