@@ -1,84 +1,106 @@
 import config from '@config/config_directoryWalker'
 import getDirectory from '../requester/getDirectory'
 
-export const buildDirectory = async () => {
-    let output = {}
 
-    let base          = config.base
-    let directoryFile = config.directory_file
-    let folderChar    = config.folder_character
-    let metaChar      = config.meta_name_character
+export const getDirectoryStructure = async () => {
+    let localConfig = localStorage.getItem(config.persistence.key_name)
+    let _dir = {}
 
-    await walk(base, directoryFile, output, folderChar, metaChar)
-    console.log(output)
-    return output
-}
-
-const walk = async (base, directoryFile, output, folderChar, metaChar, rootObj) => {
-    let dir = await getDirectory(base, directoryFile)
-
-    if (!dir) return {}
-
-    let parsedDir = parseDirectoryFile(dir, folderChar, metaChar, base)
-
-    if (!rootObj) {
-        output[base] = parsedDir
-        rootObj = parsedDir
+    if(config.persistence.force_refresh || localConfig == null || hasLocalInvalidated()){
+        _dir = await buildDirectory()
+        saveToLocal(_dir)
     } else {
-        rootObj.folders = parsedDir.folders
-        rootObj.files = parsedDir.files
+        _dir = loadFromLocal()
     }
-
-    for (const folderName of Object.keys(parsedDir.folders)) {
-        let folderObj = parsedDir.folders[folderName]
-        await walk(folderObj.link, directoryFile, output, folderChar, metaChar, folderObj)
-    }
+    return _dir
 }
 
+const loadFromLocal = () => {
+    return JSON.parse(localStorage.getItem(config.persistence.key_name))
+}
 
+const saveToLocal = newDir => {
+    localStorage.setItem(config.persistence.timestamp_key, getCurrentTimestamp())
+    localStorage.setItem(config.persistence.key_name, JSON.stringify(newDir))
+}
 
-const parseDirectoryFile = (dir, fc, mc, base, root) => {
-    let _a = {folders : {}, files: {}}
-    dir = dir.split("\n").filter(e => e && e.length > 0)
+export const buildDirectory = async () => {
+    const base = config.base
+    const directoryFile = config.directory_file
+    const folderChar = config.folder_character
+    const metaChar = config.meta_name_character
 
-    dir.forEach(e => {
-        if(e.startsWith(fc)) {
-            let _f = parseFolderMetaName(e,mc,fc)
-            _a.folders[_f['name']] =
-            {
-                name    : _f['name'],
-                metaName: _f['metaName'],
-                link    : generateFolderLink(base, _f['name']),
-                folders : {},
-                files   : {}
+    return await walk(base, directoryFile, folderChar, metaChar)
+}
+
+const walk = async (base, directoryFile, folderChar, metaChar) => {
+    const dir = await getDirectory(base, directoryFile)
+
+    if (!dir) return
+
+    const parsed = parseDirectoryFile(dir, folderChar, metaChar, base)
+
+    for (const [folderName, folderObj] of Object.entries(parsed.folders)) {
+        const subTree = await walk(folderObj.link, directoryFile, folderChar, metaChar)
+
+        if (hasContent(subTree)) {
+            parsed.folders[folderName] = {
+                ...folderObj,
+                ...subTree
             }
+        } else {
+            delete parsed.folders[folderName]
         }
-        else {
-            let _f = parseFileMetaName(e,mc,fc)
-            _a.files[_f['name']] = {
-                name    : _f['name'],
-                metaName: _f['metaName'],
-                link    : generateFileLink(base, _f['name'])
-            }
-        }
-    })
-    return _a
+    }
+    return parsed
+}
+
+const parseDirectoryFile = (dir, fc, mc, base) => {
+    const folders = {}
+    const files = {}
+
+    dir.split("\n")
+       .filter(e => e.trim().length > 0)
+       .forEach(e => {
+           if (e.startsWith(fc)) {
+               const { name, metaName } = parseFolderMetaName(e, mc, fc)
+               folders[name] = {
+                   name,
+                   metaName,
+                   link: generateFolderLink(base, name),
+                   folders: {},
+                   files: {}
+               }
+           } else {
+               const { name, metaName, fileName } = parseFileMetaName(e, mc)
+               files[name] = {
+                   name,
+                   metaName,
+                   link: generateFileLink(base, fileName)
+               }
+           }
+       })
+
+    return { folders, files }
 }
 
 const parseFolderMetaName = (entry, mc, fc) => {
-    let _b = entry.replace(fc, "").split(mc)
-    return (_b.length > 1) ? {name: _b[0], metaName: _b[1]} : {name: _b[0], metaName: _b[0]}
+    const [name, metaName] = entry.replace(fc, "").split(mc)
+    return { name, metaName: metaName ?? name }
 }
 
-const parseFileMetaName = (entry, mc, fc) => {
-    let _b = entry.replace(fc, "").split(mc)
-    return (_b.length > 1) ? {name: _b[0], metaName: _b[1]} : {name: _b[0], metaName: _b[0]}
+const parseFileMetaName = (entry, mc) => {
+    const [name, metaName] = entry.split(mc)
+    const _a = name.split(".")[0]
+    return { name: _a, metaName: metaName ?? _a, fileName: name }
 }
 
-const generateFolderLink = (base, name) => {
-    return base + name + "/"
-}
+const generateFolderLink = (base, name) => base + name + "/"
+const generateFileLink = (base, name) => base + name
 
-const generateFileLink = (base, name) => {
-    return base + name
-}
+const hasContent = subTree => subTree && (Object.keys(subTree.folders).length > 0 || Object.keys(subTree.files).length > 0)
+
+// Local Storage Cache Invalidation calculation
+const getCurrentTimestamp = () => Math.floor(new Date().getTime() / 1000)
+const getTimeout          = () => config.persistence.invalidate
+const hasLocalInvalidated = () => ((+localStorage.getItem(config.persistence.timestamp_key)) + getTimeout()) < getCurrentTimestamp()
