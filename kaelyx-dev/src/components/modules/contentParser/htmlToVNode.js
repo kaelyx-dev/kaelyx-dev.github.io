@@ -1,10 +1,12 @@
 import findShortcode from "../shortCode/findShortcode"
 import generateShortcodeMap from "../shortCode/generateShortcodeMap"
+import config from '@config/config_contentParser'
 
 import { h } from "vue"
 
 export default htmlString => {
-    const content = generateShortcodeMap(htmlString)
+    const content = config.shortcodes.enabled ? generateShortcodeMap(htmlString, config.shortcodes.removeUnknown) : htmlString
+
     const vnodes = parseHtmlToVNodes(content.text, content.placeholder, content.map)
     return vnodes.filter(e => (typeof e) === "object" )
 }

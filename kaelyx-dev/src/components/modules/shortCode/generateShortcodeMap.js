@@ -4,13 +4,9 @@ import { h } from 'vue'
 
 const placeholderTagName = config.placeholder
 
-// TODO : Test text with no shortcodes
-
-// MD2HTML -> Sanitize -> shortCodes -> vnodeParser
-
-export default text => {
+export default (text, removeUnknownShortcode)=> {
     if(!text || text.length <= 0) return ""
-    let shortCodes = findAllShortCodes(text)
+    let shortCodes = findAllShortCodes(text, removeUnknownShortcode)
 
     shortCodes.forEach(shortcode => {
         text = text.replace(shortcode.code, shortcode.placeholder)
@@ -33,14 +29,18 @@ const regexEscape = str => {
     return str.split("").map(e => `\\${e}`).join("")
 }
 
-const findAllShortCodes = text => {
+const findAllShortCodes = (text, removeUnknownShortcode) => {
     return [...text.matchAll(regexPattern())].map((e, idx) => {
         let _id = generateShortCodeID(idx)
         let name = e.groups["shortcode"]
         let _props = {}
 
         let _component = getComponent(name)
-        if(_component == undefined) return
+
+        if(_component == undefined) {
+            if(removeUnknownShortcode) text.replace(name, "")
+            return
+        }
 
         if(e.groups['args']) {
             e.groups['args'].split(" ").map((e) => {

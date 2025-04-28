@@ -1,0 +1,10 @@
+{
+    "shortcodes": {
+        "enabled" : true,
+        "removeUnknown" : false
+    },
+    "normalizeHrefUrls" : {
+        "enabled" : true,
+        "base": "https://raw.githubusercontent.com/kaelyx-dev/kaelyx.content/refs/heads/main/"
+    }
+}
