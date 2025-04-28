@@ -1,25 +1,15 @@
-import config from '@config/config_shortCodes'
-import { getComponent } from '@module/shortCode/shortCodes/getShortCode'
 import { h } from 'vue'
+
+import config from '@config/config_shortCodes'
+
+import HelloWorld from "@module/Content/components/shortcodes/HelloWorld.vue"
+import Icon from "@module/Content/components/shortcodes/Icon.vue"
 
 const placeholderTagName = config.placeholder
 
-export default (text, removeUnknownShortcode)=> {
-    if(!text || text.length <= 0) return ""
-    let shortCodes = findAllShortCodes(text)
-    
-    shortCodes.forEach(shortcode => {
-
-        if(shortcode.component) text = text.replace(shortcode.code, shortcode.placeholder)
-        else if(removeUnknownShortcode) text = text.replace(shortcode.code, "")
-        
-    })
-
-    return {
-        text: text,
-        placeholder: placeholderTagName,
-        map : shortCodes.filter(e => e)
-    }
+const shortCodes = {
+    "HELLOWORLD": HelloWorld,
+    "ICON": Icon
 }
 
 const regexPattern = () => {
@@ -32,13 +22,31 @@ const regexEscape = str => {
     return str.split("").map(e => `\\${e}`).join("")
 }
 
+export const generateShortcodeMap = (text, removeUnknownShortcodes) => {
+    if(!text || text.length <= 0) return ""
+    let shortCodes = findAllShortCodes(text)
+
+    shortCodes.forEach(shortcode => {
+
+        if(shortcode.component) text = text.replace(shortcode.code, shortcode.placeholder)
+        else if(removeUnknownShortcodes) text = text.replace(shortcode.code, "")
+
+    })
+
+    return {
+        text: text,
+        placeholder: placeholderTagName,
+        map : shortCodes.filter(e => e)
+    }
+}
+
 const findAllShortCodes = (text) => {
     return [...text.matchAll(regexPattern())].map((e, idx) => {
-        let _id = generateShortCodeID(idx)
+        let _id = `sc_${idx}_${Math.random().toString(16).slice(4)}`
         let name = e.groups["shortcode"]
         let _props = {}
 
-        let _component = getComponent(name)        
+        let _component = getComponent(name)
 
         if(e.groups['args']) {
             e.groups['args'].split(" ").map((e) => {
@@ -58,9 +66,12 @@ const findAllShortCodes = (text) => {
 }
 
 const createHyperscriptObject = (component, props) => (component) ? props ? h(component, props) : h(component) : undefined
+const generatePlaceholderNode = id => `<${placeholderTagName} data-id=\"${id}\"></${placeholderTagName}>`
 
-const generateShortCodeID = val => {
-    return `sc_${val}_${Math.random().toString(16).slice(4)}`
+export const findShortcode = (id, list) => {
+    return list.filter(e => e.id == id)[0]
 }
 
-const generatePlaceholderNode = id => `<${placeholderTagName} data-id=\"${id}\"></${placeholderTagName}>`
+export const getComponent = componentName => {
+    return shortCodes[Object.keys(shortCodes).filter(e => e.toUpperCase() == componentName.toUpperCase())[0]]
+}

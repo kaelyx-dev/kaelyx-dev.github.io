@@ -1,6 +1,6 @@
 <script setup>
 
-import ContentRenderer from '@module/contentParser/ContentRenderer.vue'
+import ContentRenderer from '@module/Content/Components/ContentRenderer.vue'
 
 </script>
 <template>

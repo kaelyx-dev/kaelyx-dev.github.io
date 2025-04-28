@@ -1,5 +1,5 @@
 import config from '@config/config_directoryWalker'
-import getDirectory from '../requester/getDirectory'
+import getDirectory from '../../Request/Utilities/getDirectory'
 
 
 export const getDirectoryStructure = async () => {

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { computed, ref} from 'vue'
-import loadConfig from '@module/configHandler/loadConfig'
+import loadConfig from '@module/Config/loadConfig'
 
 export const useConfigStore = defineStore('config', () => {
 

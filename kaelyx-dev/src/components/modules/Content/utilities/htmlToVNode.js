@@ -1,5 +1,4 @@
-import findShortcode from "../shortCode/findShortcode"
-import generateShortcodeMap from "../shortCode/generateShortcodeMap"
+import { findShortcode, generateShortcodeMap } from "./shortcode"
 import config from '@config/config_contentParser'
 
 import { h } from "vue"

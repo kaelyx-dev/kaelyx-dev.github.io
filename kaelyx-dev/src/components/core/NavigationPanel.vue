@@ -1,5 +1,5 @@
 <script setup>
-import NavRenderer from '@module/directoryWalker/NavRenderer.vue'
+import NavRenderer from '@module/Navigation/Components/NavRenderer.vue'
 
 </script>
 <template>

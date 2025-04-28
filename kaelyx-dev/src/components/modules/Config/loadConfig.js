@@ -1,5 +1,5 @@
 import config from '@config/config_configHandler.json'
-import getConfigFile from '../requester/getConfigFile'
+import getConfigFile from '@module/Request/Utilities/getConfigFile'
 
 const CONFIG_LIST_DELIMITER = ";"
 const CONFIG_COMMENT_CHARACTER = "#"

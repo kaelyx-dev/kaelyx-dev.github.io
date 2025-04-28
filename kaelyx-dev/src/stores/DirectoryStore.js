@@ -1,17 +1,24 @@
-import { getDirectoryStructure } from '@/components/modules/directoryWalker/walker'
+import { getDirectoryStructure } from '@/components/modules/Navigation/Utilities/walker'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import getContent from '@module/Request/Utilities/getContent'
+import parser from '@module/Content/utilities/parser'
+import setPageTitle from '@/components/utilities/setPageTitle'
 
 export const useDirectoryStore = defineStore('directory', () => {
 
     let pages = ref({})
     let activeContentUrl = ref("")
+    let content = ref([])
 
     const init = async permalink => {
         let directory = await getDirectoryStructure();
         pages.value = directory
 
-        if(permalink) setActivePage(permalink)
+        if(permalink) {
+            setActivePage(permalink)
+            await buildContent()
+        }
     }
 
     const getDirectory = () => {
@@ -22,6 +29,20 @@ export const useDirectoryStore = defineStore('directory', () => {
         activeContentUrl.value = pageLink
     }
 
-    return { init, getDirectory, setActivePage, pages, activeContentUrl }
+    const buildContent = async () => {
+        let file = await getContent(activeContentUrl.value)
+
+        let parsed = parser(file)
+        content.value = parsed.content
+
+        if(parsed.meta["title"]) setPageTitle(parsed.meta["title"])
+
+
+    }
+
+    watch(() => activeContentUrl, () => buildContent())
+
+
+    return { init, getDirectory, setActivePage, pages, activeContentUrl, content}
 
 })
