@@ -1,11 +1,9 @@
 <script setup>
-    import { useDirectoryStore } from '@store/DirectoryStore';
-
-    const directory  = useDirectoryStore()
+import NavRenderer from '@module/directoryWalker/NavRenderer.vue'
 
 </script>
 <template>
     <div class="box">
-        {{ directory.getDirectory() }}
+        <NavRenderer/>
     </div>
 </template>

@@ -19,7 +19,7 @@ export const useConfigStore = defineStore('config', () => {
     const getConfig      = computed(() => config.value)
     const getConfigGroup = group => {
         let _a = {}
-        config.value.forEach((k,v) => k.startsWith(group) ? _a[k] = config.value[k] : null)
+        config.value.forEach((k,v) => k.startsWith(group) ? _a[k.substring(group.length + 1)] = config.value[k] : null)
         return _a.filter(e => e != null)
     }
 

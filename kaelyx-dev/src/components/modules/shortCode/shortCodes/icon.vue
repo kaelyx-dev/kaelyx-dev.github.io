@@ -5,5 +5,5 @@
 // class override
 </script>
 <template>
-
+    <p>Icon :)</p>
 </template>
