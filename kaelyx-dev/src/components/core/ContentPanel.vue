@@ -2,7 +2,7 @@
     import { ref } from 'vue';
     import { useConfigStore } from '@store/ConfigStore';
     import { useDirectoryStore } from '@store/DirectoryStore';
-    import htmlToVNode from '@module/htmlParser/htmlToVNode';
+    import htmlToVNode from '@module/contentParser/htmlToVNode';
 
     let config = useConfigStore()
     let directory = useDirectoryStore()

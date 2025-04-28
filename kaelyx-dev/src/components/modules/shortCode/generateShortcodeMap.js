@@ -6,16 +6,19 @@ const placeholderTagName = config.placeholder
 
 export default (text, removeUnknownShortcode)=> {
     if(!text || text.length <= 0) return ""
-    let shortCodes = findAllShortCodes(text, removeUnknownShortcode)
-
+    let shortCodes = findAllShortCodes(text)
+    
     shortCodes.forEach(shortcode => {
-        text = text.replace(shortcode.code, shortcode.placeholder)
+
+        if(shortcode.component) text = text.replace(shortcode.code, shortcode.placeholder)
+        else if(removeUnknownShortcode) text = text.replace(shortcode.code, "")
+        
     })
 
     return {
         text: text,
         placeholder: placeholderTagName,
-        map : shortCodes
+        map : shortCodes.filter(e => e)
     }
 }
 
@@ -29,18 +32,13 @@ const regexEscape = str => {
     return str.split("").map(e => `\\${e}`).join("")
 }
 
-const findAllShortCodes = (text, removeUnknownShortcode) => {
+const findAllShortCodes = (text) => {
     return [...text.matchAll(regexPattern())].map((e, idx) => {
         let _id = generateShortCodeID(idx)
         let name = e.groups["shortcode"]
         let _props = {}
 
-        let _component = getComponent(name)
-
-        if(_component == undefined) {
-            if(removeUnknownShortcode) text.replace(name, "")
-            return
-        }
+        let _component = getComponent(name)        
 
         if(e.groups['args']) {
             e.groups['args'].split(" ").map((e) => {
@@ -56,7 +54,7 @@ const findAllShortCodes = (text, removeUnknownShortcode) => {
             component   : createHyperscriptObject(_component, _props),
             placeholder : generatePlaceholderNode(_id)
         }
-    }).filter(e => e)
+    })
 }
 
 const createHyperscriptObject = (component, props) => (component) ? props ? h(component, props) : h(component) : undefined
