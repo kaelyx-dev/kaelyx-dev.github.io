@@ -10,7 +10,7 @@ export const getPermalinkQueryParam = () => {
 export const decodePermalink = encodedLink => {
 
     switch(config.permalinkEncoding.toUpperCase()){
-        case "BASE64": return atob(encodedLink)
+        case "BASE64": return decodeURIComponent(atob(encodedLink))
         case "PLAIN":
         default: return encodedLink
     }
@@ -18,7 +18,7 @@ export const decodePermalink = encodedLink => {
 
 export const encodePermaLink = unencodedLink => {
     switch(config.permalinkEncoding.toUpperCase()){
-        case "BASE64": return btoa(unencodedLink)
+        case "BASE64": return encodeURIComponent(btoa(unencodedLink))
         case "PLAIN":
         default: return unencodedLink
     }
