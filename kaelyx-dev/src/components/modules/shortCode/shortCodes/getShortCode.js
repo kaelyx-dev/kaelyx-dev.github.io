@@ -1,7 +1,9 @@
 import HelloWorld from "./helloWorld.vue"
+import Icon from "./icon.vue"
 
 const shortCodes = {
-    "HELLOWORLD": HelloWorld
+    "HELLOWORLD": HelloWorld,
+    "ICON": Icon
 }
 
 export const getComponent = componentName => {
