@@ -21,9 +21,12 @@ html {
 
 body {
     font-family: 'JetBrains Mono', monospace;
+
     width: 100ch;
-    margin-top: spacing.spacing('medium');
-    height: calc(100vh - spacing.spacing('huge'));
+    height: 100vh;
+
+    padding-top: spacing.spacing('medium');
+    padding-bottom: spacing.spacing('medium');
     display: flex;
     flex-direction: column;
 
@@ -45,7 +48,12 @@ ul, ol {
 }
 .content {
     flex: 1;
+    flex-grow: 1;
     display: grid;
+
+    overflow: auto;
+    min-height: 0;
+
     grid-template-columns: minmax(auto, 30%) auto;
     column-gap: spacing.spacing('medium');
 
