@@ -11,5 +11,5 @@ let readTime = calculate(store.contentLength)
 
 </script>
 <template>
-    <p v-if="visible" class="button button--noclick pseudo-button--gray-3">Time: {{ readTime }} Minute{{ readTime != 1 ? "s" : "" }}</p>
+    <p v-if="visible" class="button pseudo-button--gray-3">Time: {{ readTime }} Minute{{ readTime != 1 ? "s" : "" }}</p>
 </template>

@@ -12,10 +12,6 @@
     color: colours.colour("white");
     text-decoration: none;
     text-align: center;
-
-    @include mq.mq($until: stablet){
-        width: 100%;
-    }
 }
 
 @each $name, $value in colours.$coloursMap {
@@ -38,7 +34,6 @@
 
 @each $name, $value in colours.$coloursMap {
     .pseudo-button--#{$name}{
-        display: inline-block;
         background-color: $value;
         box-shadow: 2px 2px 0px 0px colours.colour("gray-3");
     }
@@ -70,8 +65,4 @@
         box-shadow: 1px 1px 0px 0px colours.colour("gray-2");
     }
 
-}
-
-.button--noclick {
-    cursor: initial;
 }
