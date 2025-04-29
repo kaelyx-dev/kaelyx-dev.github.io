@@ -1,4 +1,5 @@
 {
+    "base": "https://raw.githubusercontent.com/kaelyx-dev/kaelyx.content/refs/heads/main/",
     "shortcodes": {
         "enabled" : true,
         "removeUnknown" : true
@@ -11,7 +12,7 @@
         "wpm" : 200
     },
     "permalink" : {
-        "permalinkQueryKey" : "p",
-        "permalinkEncoding" : "BASE64"
+        "queryKey" : "p",
+        "encoding" : "BASE64"
     }
 }

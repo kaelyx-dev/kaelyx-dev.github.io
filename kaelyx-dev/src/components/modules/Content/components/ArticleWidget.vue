@@ -1,10 +1,18 @@
 <script setup>
-import Permalink from './Permalink.vue';
+import Share from './Share.vue';
 import ReadTime from './ReadTime.vue';
 
 
 </script>
 <template>
-    <ReadTime/>
-    <Permalink/>
+    <div class="article-widget">
+        <ul>
+            <li>
+                <Share/>
+            </li>
+            <li>
+                <ReadTime/>
+            </li>
+        </ul>
+    </div>
 </template>

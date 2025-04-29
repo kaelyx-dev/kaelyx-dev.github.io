@@ -1,15 +1,15 @@
 const metaObj = {
-    Title        : undefined,
-    Type         : undefined,
-    Date         : undefined,
-    Keywords     : undefined,
-    showPermalink: undefined,
-    showReadTime : undefined
+    title        : undefined,
+    type         : undefined,
+    date         : undefined,
+    keywords     : undefined,
+    showpermalink: undefined,
+    showreadtime : undefined
 }
 
 const generateDefaultMetaObj = () => {
-    let _obj = structuredClone(metaObj)
-    let defaultValues = {Type: "GENERAL", showPermalink: false, showReadTime: false}
+    let _obj = {...metaObj}
+    let defaultValues = {type: "GENERAL", showpermalink: false, showreadtime: false}
 
     Object.keys(defaultValues).forEach(e => _obj[e] = defaultValues[e])
 
@@ -17,17 +17,17 @@ const generateDefaultMetaObj = () => {
 }
 
 export const parseMeta = meta => {
-
-
-    let newMeta = generateDefaultMetaObj()
+    let newMeta = {... generateDefaultMetaObj()}
     if(Object.keys(meta).length == 0) return newMeta
 
-    Object.keys(meta).forEach(e => newMeta[e] = meta[e])
-    console.log(meta)
+    Object.keys(meta).forEach(e => {
+        newMeta[e.toLowerCase()] = meta[e.toLowerCase()]
+    })
+
     if(meta.type.toUpperCase() == "ARTICLE") {
-        newMeta.showPermalink = true
-        newMeta.showReadTime  = true
+        newMeta.showpermalink = true
+        newMeta.showreadtime  = true
     }
-    
+    console.log(newMeta)
     return newMeta
 }

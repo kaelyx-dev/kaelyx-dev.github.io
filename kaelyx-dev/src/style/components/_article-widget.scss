@@ -1,0 +1,14 @@
+@use '../variables/spacing';
+@use '../mq';
+
+.article-widget {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: spacing.spacing("medium");
+    max-height: fit-content;
+
+    @include mq.mq($until: stablet){
+        flex-direction: column;
+    }
+}

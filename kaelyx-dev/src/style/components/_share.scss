@@ -1,0 +1,27 @@
+@use '../mq';
+@use '../variables/spacing';
+
+.share {
+    &__permalink{
+        margin-top: spacing.spacing("small");
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.permalink{
+    &__input {
+        display: flex;
+        flex-direction: row;
+        gap: spacing.spacing("tiny");
+
+        input {
+            padding: spacing.spacing("small");
+            color: white;
+            background-color: transparent;
+            border: 2px solid white;
+            flex: 1;
+        }
+    }
+
+}

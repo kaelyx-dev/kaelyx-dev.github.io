@@ -2,10 +2,14 @@
 import { useDirectoryStore } from '@store/DirectoryStore';
 import { calculate } from '../utilities/timeToRead';
 import { computed } from 'vue';
+
 let store = useDirectoryStore()
 
-let visible = computed(() => store.meta.Type == "ARTICLE")
+let visible = computed(() => store.meta.type == "ARTICLE")
+
+let readTime = calculate(store.contentLength)
+
 </script>
 <template>
-    <p v-if="visible">Time: {{ calculate(store.contentLength) }} Minutes</p>
+    <p v-if="visible" class="button button--noclick pseudo-button--gray-3">Time: {{ readTime }} Minute{{ readTime != 1 ? "s" : "" }}</p>
 </template>

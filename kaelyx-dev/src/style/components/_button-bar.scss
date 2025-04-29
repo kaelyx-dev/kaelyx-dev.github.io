@@ -1,10 +1,13 @@
 @use "../variables/spacing";
+@use "../mq";
 
 #button-bar {
     display: flex;
     flex-direction: row;
     padding: spacing.spacing('large') spacing.spacing('large');
-    
+
+    gap: spacing.spacing("medium");
+
     ul {
         flex: 1;
         list-style: none;
@@ -13,5 +16,13 @@
         flex-wrap: wrap;
         justify-content: start;
         gap: spacing.spacing('medium');
+
+        @include mq.mq($until: stablet){
+            flex-direction: column;
+        }
+    }
+
+    @include mq.mq($until: stablet){
+        flex-direction: column;
     }
 }
