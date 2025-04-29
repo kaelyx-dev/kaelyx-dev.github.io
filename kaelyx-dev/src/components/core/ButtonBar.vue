@@ -1,4 +1,5 @@
 <script setup>
+import ArticleWidget from '../modules/Content/components/ArticleWidget.vue';
 import Button from './Button.vue';
 
 import { useConfigStore } from '@/stores/ConfigStore';
@@ -16,5 +17,6 @@ let buttons = config.getValue("header.social.links").map(e => {
             <Button :button="button"/>
         </li>
     </ul>
+    <ArticleWidget/>
 </section>
 </template>

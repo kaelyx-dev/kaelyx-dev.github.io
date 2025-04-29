@@ -6,5 +6,12 @@
     "normalizeHrefUrls" : {
         "enabled" : true,
         "base": "https://raw.githubusercontent.com/kaelyx-dev/kaelyx.content/refs/heads/main/"
+    },
+    "timeToRead" : {
+        "wpm" : 200
+    },
+    "permalink" : {
+        "permalinkQueryKey" : "p",
+        "permalinkEncoding" : "BASE64"
     }
 }

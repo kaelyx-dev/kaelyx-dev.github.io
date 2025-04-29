@@ -10,6 +10,7 @@ export const useDirectoryStore = defineStore('directory', () => {
     let pages = ref({})
     let activeContentUrl = ref("")
     let content = ref([])
+    let contentLength = ref(0)
     let meta = ref({})
 
     const init = async permalink => {
@@ -35,6 +36,7 @@ export const useDirectoryStore = defineStore('directory', () => {
 
         let parsed = parser(file)
         content.value = parsed.content
+        contentLength.value = parsed.length
         buildMeta(parsed.meta)
     }
 
@@ -45,6 +47,6 @@ export const useDirectoryStore = defineStore('directory', () => {
     watch(() => activeContentUrl, () => buildContent())
 
 
-    return { init, getDirectory, setActivePage, pages, activeContentUrl, content, meta}
+    return { init, getDirectory, setActivePage, pages, activeContentUrl, content, meta, contentLength}
 
 })

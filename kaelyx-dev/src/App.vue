@@ -10,7 +10,7 @@ import setPageTitle from '@utility/setPageTitle'
 import { useDirectoryStore } from './stores/DirectoryStore';
 import NavigationPanel from './components/core/NavigationPanel.vue';
 import ContentPanel from './components/core/ContentPanel.vue';
-import { getPermalinkQueryParam } from './components/utilities/permalink';
+import { getPermalinkQueryParam } from '@module/Content/utilities/permalink';
 
 const config = useConfigStore()
 const directory  = useDirectoryStore()

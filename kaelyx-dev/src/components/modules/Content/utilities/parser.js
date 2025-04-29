@@ -7,7 +7,8 @@ const regexPattern = () => new RegExp(`${startChar}(?<meta>.*?)${endChar}`, "g")
 
 
 export default md => {
-    let _content = {meta: {}, content: [], length: md.trim().split(/\s+/).length()}
+
+    let _content = {meta: {}, content: [], length: md.trim().split(/\s+/).length}
     if (!md || md.length == 0) return _content
 
     getAllMetaFields(md).forEach(e => {

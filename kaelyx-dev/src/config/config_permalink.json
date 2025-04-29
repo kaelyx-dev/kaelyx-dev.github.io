@@ -1,4 +1,4 @@
 {
-    "permalinkQueryKey" : "p",
-    "permalinkEncoding" : "BASE64"
+    "QueryKey" : "p",
+    "Encoding" : "BASE64"
 }

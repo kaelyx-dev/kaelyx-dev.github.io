@@ -1,8 +1,12 @@
 @use "../variables/spacing";
 
 #button-bar {
+    display: flex;
+    flex-direction: row;
     padding: spacing.spacing('large') spacing.spacing('large');
+    
     ul {
+        flex: 1;
         list-style: none;
         display: flex;
         flex-direction: row;
