@@ -1,6 +1,4 @@
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue';
-
 import ContentRenderer from '@module/Content/Components/ContentRenderer.vue'
 </script>
 <template>

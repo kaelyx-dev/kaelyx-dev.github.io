@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
 import getContent from '@module/Request/Utilities/getContent'
 import parser from '@module/Content/utilities/parser'
-import setPageTitle from '@/components/utilities/setPageTitle'
+import { parseMeta } from '@module/Content/utilities/meta'
 
 export const useDirectoryStore = defineStore('directory', () => {
 
@@ -39,7 +39,7 @@ export const useDirectoryStore = defineStore('directory', () => {
     }
 
     const buildMeta = newMeta => {
-        meta.value = newMeta
+        meta.value = parseMeta(newMeta)
     }
 
     watch(() => activeContentUrl, () => buildContent())
