@@ -10,6 +10,7 @@ export const useDirectoryStore = defineStore('directory', () => {
     let pages = ref({})
     let activeContentUrl = ref("")
     let content = ref([])
+    let meta = ref({})
 
     const init = async permalink => {
         let directory = await getDirectoryStructure();
@@ -34,15 +35,16 @@ export const useDirectoryStore = defineStore('directory', () => {
 
         let parsed = parser(file)
         content.value = parsed.content
+        buildMeta(parsed.meta)
+    }
 
-        if(parsed.meta["title"]) setPageTitle(parsed.meta["title"])
-
-
+    const buildMeta = newMeta => {
+        meta.value = newMeta
     }
 
     watch(() => activeContentUrl, () => buildContent())
 
 
-    return { init, getDirectory, setActivePage, pages, activeContentUrl, content}
+    return { init, getDirectory, setActivePage, pages, activeContentUrl, content, meta}
 
 })

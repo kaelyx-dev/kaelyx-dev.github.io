@@ -7,5 +7,9 @@
 }
 
 .nav-bar {
+    overflow: auto;
+    min-height: 0;
 
+    scrollbar-color: #ffffff #000000;
+    scrollbar-width: thin;
 }

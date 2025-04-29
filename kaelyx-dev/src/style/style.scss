@@ -51,7 +51,6 @@ ul, ol {
     flex-grow: 1;
     display: grid;
 
-    overflow: auto;
     min-height: 0;
 
     grid-template-columns: minmax(auto, 30%) auto;
