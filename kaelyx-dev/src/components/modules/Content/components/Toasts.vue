@@ -10,14 +10,20 @@ const { toasts } = storeToRefs(toastStore)
 
 </script>
 <template>
-    <TransitionGroup name="toast" tag="div">
-        <div v-for="toast in toasts" key="{{ toast.id }}" class="toastItem">
-            {{ toast.content }}
-        </div>
-    </TransitionGroup>
+    <div class="toasts">
+        <TransitionGroup name="toast" tag="div">
+            <div v-for="toast in toasts" key="{{ toast.id }}" class="toastItem">
+                {{ toast.content }}
+            </div>
+        </TransitionGroup>
+    </div>
 </template>
 
 <style scoped>
+
+.toasts {
+    position: fixed;
+}
 
 .toastItem {
     color: white;
