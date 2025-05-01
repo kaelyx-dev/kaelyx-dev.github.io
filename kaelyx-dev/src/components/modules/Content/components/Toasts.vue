@@ -1,4 +1,5 @@
 <script setup>
+import { TransitionGroup } from 'vue';
 
 import { useToastStore } from '@store/ToastStore';
 import { storeToRefs } from 'pinia';
@@ -10,9 +11,9 @@ const { toasts } = storeToRefs(toastStore)
 
 </script>
 <template>
-    <div class="toasts-container">
-        <div v-for="toast in toasts" key="{{ toast.id }}" class="toastItem">
-            <Toast :content="toast.content"/>
-        </div>
-    </div>
+    <TransitionGroup name="toast" tag="ul" class="toasts-container">
+        <li v-for="toast in toasts" key="{{ toast.id }}" class="toastItem">
+            <Toast :toast="toast"/>
+        </li>
+    </TransitionGroup>
 </template>

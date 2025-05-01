@@ -26,4 +26,39 @@
     text-align: center;
     color: white;
     text-wrap: wrap;
+
+    animation: toast-slide-in 1.0s forwards;}
+
+.toast-move {
+    transition: transform 0.3s ease;
 }
+.toast-leave {
+    background-color: red;
+    // animation: toast-slide-out 1.0s forwards;
+}
+
+@keyframes toast-slide-in {
+    from {
+        translate: -10vw 0;
+        opacity: 0;
+    }
+  
+    to {
+        translate: 0 0;
+        opacity:1;
+    }
+}
+
+@keyframes toast-slide-out {
+    from {
+        translate: 0 0;
+        opacity:1;
+    }
+  
+    to {
+        translate: -10vw 0;
+        opacity: 0;
+    }
+}
+
+
