@@ -11,6 +11,7 @@ import { useDirectoryStore } from './stores/DirectoryStore';
 import NavigationPanel from './components/core/NavigationPanel.vue';
 import ContentPanel from './components/core/ContentPanel.vue';
 import { getPermalinkQueryParam } from '@module/Content/utilities/permalink';
+import Toasts from '@module/Content/components/Toasts.vue';
 
 const config = useConfigStore()
 const directory  = useDirectoryStore()
@@ -33,6 +34,7 @@ setPageTitle(config.getValue("site.title", "KAELYX").toUpperCase())
       <ContentPanel/>
     </main>
     <Footer/>
+    <Toasts/>
   </template>
   <Loader v-else/>
 </template>

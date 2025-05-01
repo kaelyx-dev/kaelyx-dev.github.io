@@ -28,6 +28,5 @@ export const parseMeta = meta => {
         newMeta.showpermalink = true
         newMeta.showreadtime  = true
     }
-    console.log(newMeta)
     return newMeta
 }
