@@ -17,7 +17,7 @@ const toastStore = useToastStore()
 const permalinkToClipboard  = async () => {
     try {
         await navigator.clipboard.writeText(permalink);
-        toastStore.createToast('Copied to clipboard ' + Math.random().toString(16).slice(4))
+        toastStore.createToast('Copied to clipboard')
     } catch($e) {
         toastStore.createToast('Failed to copy to clipboard')
     }

@@ -9,7 +9,7 @@ export const useToastStore = defineStore('toast', () => {
         let _t = {id: _id, content: content}
 
         toasts.value.push(_t)
-        setTimeout(removeToast, 3000)
+        setTimeout(removeToast, lifetime)
     }
 
     const removeToast = () => {

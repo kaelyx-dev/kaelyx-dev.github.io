@@ -1,0 +1,29 @@
+@use '../variables/spacing';
+
+.toasts-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0;
+
+    list-style-type: none;
+
+    display: flex;
+    flex-direction: column-reverse;
+    gap: spacing.spacing("small");
+    margin: spacing.spacing("small");
+
+    width: 15%;
+}
+
+.toast {
+    max-width: 100%;
+    padding: spacing.spacing("small");
+
+    border: 2px solid white;
+    background-color: black;
+    
+    text-align: center;
+    color: white;
+    text-wrap: wrap;
+}
