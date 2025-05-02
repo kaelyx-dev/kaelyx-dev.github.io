@@ -1,5 +1,5 @@
 <script setup>
-import { Transition, TransitionGroup, Teleport } from 'vue';
+import { Teleport } from 'vue';
 
 import { useToastStore } from '@store/ToastStore';
 import { storeToRefs } from 'pinia';
