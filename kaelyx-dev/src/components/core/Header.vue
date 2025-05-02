@@ -8,7 +8,7 @@ const config = useConfigStore()
     <header>
       <div class="box">
         <h1>
-          <span class="text--green">$</span> /{{config.getValue("header.username", "kaelyx")}}/dev/ <span class="text--light-blue">></span> echo Hello World...
+          <span class="text--green">$</span> /dev/{{config.getValue("header.username", "kaelyx")}}/ <span class="text--light-blue">></span> echo Hello World...
         </h1>
       </div>
       <ButtonBar/>

@@ -24,7 +24,7 @@ export const useDirectoryStore = defineStore('directory', () => {
     }
 
     const getDirectory = () => {
-        return pages
+        return pages.value
     }
 
     const setActivePage = pageLink => {
@@ -44,8 +44,10 @@ export const useDirectoryStore = defineStore('directory', () => {
         meta.value = parseMeta(newMeta)
     }
 
-    watch(() => activeContentUrl, () => buildContent())
-
+    watch(activeContentUrl, newActiveContentUrl => {
+        if(newActiveContentUrl == activeContentUrl) return
+        buildContent()
+    })
 
     return { init, getDirectory, setActivePage, pages, activeContentUrl, content, meta, contentLength}
 

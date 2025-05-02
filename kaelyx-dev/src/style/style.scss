@@ -11,6 +11,10 @@
 @use 'components/components';
 @use "variables/spacing";
 
+* {
+    line-height: spacing.line();
+}
+
 html {
     @extend .bg--black;
     @extend .text--white;

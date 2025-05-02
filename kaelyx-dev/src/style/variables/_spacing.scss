@@ -15,3 +15,11 @@ $multipliers : (
 @function spacing($name){
     @return map.get($map: $multipliers, $key: $name) * $base-value + px;
 }
+
+
+// @function line() {
+//     @return 1em;
+// }
+@function line() {
+    @return 1.2em;
+}
