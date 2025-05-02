@@ -8,31 +8,33 @@
     scrollbar-width: thin;
 
     h1 {
-
+        font-size: 1.5em;
     }
 
     h2 {
-
+        font-size: 1.3em;
     }
 
     h3 {
+        font-size: 1.1em;
 
     }
 
     h4 {
-
+        font-size: 1.0em;
     }
 
     h5 {
+        font-size: 1.0em;
 
     }
 
     h6 {
-
+        font-size: 1.0em;
     }
 
     p {
-
+        font-size: 1.0em;
     }
 
     ul, ol {
@@ -40,7 +42,7 @@
     }
 
     li {
-        margin-left: spacing.spacing('huge');
+        margin-left: spacing.spacing('large');
     }
 
 
