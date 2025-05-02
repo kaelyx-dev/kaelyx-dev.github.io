@@ -8,21 +8,12 @@ export const useToastStore = defineStore('toast', () => {
         const _id = Math.random().toString(16)
         let _t = {id: _id, content: content, lifetime: lifetime}
 
-
-        if(toasts.value.length > 8) {
-            removeFirstToast()
-        }
-
         toasts.value.push(_t)
         setTimeout(()=>removeToast(_t.id), lifetime)
     }
 
     const removeToast = id => {
         toasts.value = toasts.value.filter(e => e.id != id)
-    }
-
-    const removeFirstToast = () => {
-        toasts.value = toasts.value.slice(1)
     }
 
     const clearToasts = () => {
