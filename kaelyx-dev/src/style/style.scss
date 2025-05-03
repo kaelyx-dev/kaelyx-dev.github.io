@@ -55,11 +55,11 @@ body {
 
     grid-template-columns: minmax(auto, 25%) auto;
 
+    column-gap: spacing.spacing('medium');
+
     @include mq.mq($until: wide){
         grid-template-columns: minmax(auto, 35%) auto;
     }
-
-    column-gap: spacing.spacing('medium');
 
     @include mq.mq($until: desktop){
         display: flex;
