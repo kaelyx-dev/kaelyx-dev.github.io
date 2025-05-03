@@ -6,11 +6,7 @@ import { computed, watch} from 'vue';
 let store = useDirectoryStore()
 
 let visible = computed(() => store.meta.type == "ARTICLE")
-let readTime = calculate(store.contentLength.value)
-
-watch(store, () => {
-    readTime = calculate(store.contentLength)
-})
+let readTime = calculate(store.contentLength)
 
 </script>
 <template>

@@ -1,6 +1,7 @@
 @use '../mq';
 
 .modal-overlay {
+    z-index: 99999;
     position: fixed;
     top: 0;
     left: 0;
@@ -15,7 +16,7 @@
 }
 
 .modal-content {
-    z-index: 999;
+    z-index: 99999;
     background: black;
     border: 2px white solid;
     padding: 8px;

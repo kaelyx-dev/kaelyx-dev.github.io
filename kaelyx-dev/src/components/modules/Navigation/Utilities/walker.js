@@ -75,10 +75,12 @@ const parseDirectoryFile = (dir, fc, mc, base) => {
                }
            } else {
                const { name, metaName, fileName } = parseFileMetaName(e, mc)
+               const _link = generateFileLink(base, fileName)
                files[name] = {
                    name,
                    metaName,
-                   link: generateFileLink(base, fileName)
+                   link: _link,
+                   filetype: getFiletype(_link)
                }
            }
        })
@@ -95,6 +97,11 @@ const parseFileMetaName = (entry, mc) => {
     const [name, metaName] = entry.split(mc)
     const _a = name.split(".")[0]
     return { name: _a, metaName: metaName ?? _a, fileName: name }
+}
+
+const getFiletype = link => {
+    const linkArr = link.split(".")
+    return linkArr[linkArr.length - 1]
 }
 
 const generateFolderLink = (base, name) => base + name + "/"

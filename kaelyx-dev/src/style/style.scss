@@ -26,13 +26,17 @@ html {
 body {
     font-family: 'JetBrains Mono', monospace;
 
-    width: 100ch;
+    width: 120ch;
     height: 100vh;
 
     padding-top: spacing.spacing('medium');
     padding-bottom: spacing.spacing('medium');
     display: flex;
     flex-direction: column;
+
+    @include mq.mq($until: wide){
+        width: 100ch;
+    }
 
     @include mq.mq($until: desktop){
         width: 98%;

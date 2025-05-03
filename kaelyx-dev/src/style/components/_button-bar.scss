@@ -6,7 +6,9 @@
     flex-direction: row;
     padding: spacing.spacing('large') spacing.spacing('large');
 
-    gap: spacing.spacing("medium");
+    @include mq.mq($until: stablet){
+        gap: spacing.spacing("small");
+    }
 
     ul {
         flex: 1;
@@ -15,7 +17,7 @@
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: start;
-        gap: spacing.spacing('medium');
+        gap: spacing.spacing('small');
 
         @include mq.mq($until: stablet){
             flex-direction: column;
