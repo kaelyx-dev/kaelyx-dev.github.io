@@ -1,18 +1,16 @@
 import axios from 'axios'
 
-import config from '@config/config_requester.json'
+export default async (base, contentPath) => {
 
-export default async contentPath => {
     if(contentPath == "") return
     let res
     try {
-        res = await axios(config.base + ( contentPath ?? ""))
+        res = await axios(base + ( contentPath ?? ""))
     }catch(error){
         res = error
     }
 
     if(res.code != undefined && res.code == "ERR_BAD_REQUEST"){
-        console.log("Bad Request")
         return ""
     }
 

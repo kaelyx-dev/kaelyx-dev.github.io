@@ -1,9 +1,0 @@
-{
-    "config_location" : "site.conf",
-    "persistence":{
-        "force_refresh": true,
-        "key_name" : "config",
-        "invalidate": 86400,
-        "timestamp_key": "lastConfigRefresh"
-    }
-}

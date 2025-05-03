@@ -17,11 +17,12 @@ const config = useConfigStore()
 const directory  = useDirectoryStore()
 
 let loading = ref(true)
-
-Promise.all([
-  config.init(),
-  directory.init(getPermalinkQueryParam())
-]).then(() => loading.value = false)
+config.init().then(() => {
+  directory.init(getPermalinkQueryParam()).then(() => {
+    if(!directory.isActiveContentUrlSet) directory.activeContentUrl = config.getValue("site.default.page") ?? ""
+    loading.value = false
+  })
+})
 
 setPageTitle(config.getValue("site.title", "KAELYX").toUpperCase())
 

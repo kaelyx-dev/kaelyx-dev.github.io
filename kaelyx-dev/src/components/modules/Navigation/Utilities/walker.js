@@ -1,34 +1,36 @@
-import config from '@config/config_directoryWalker'
 import getDirectory from '../../Request/Utilities/getDirectory'
 
+let config
 
-export const getDirectoryStructure = async () => {
-    let localConfig = localStorage.getItem(config.persistence.key_name)
+export const getDirectoryStructure = async _config => {
+    config = _config
+    let localConfig = localStorage.getItem(config.getValue("directory.persistence.keyname"))
     let _dir = {}
 
-    if(config.persistence.force_refresh || localConfig == null || hasLocalInvalidated()){
+    if(config.getValue("directory.persistence.forcerefresh") || localConfig == null || hasLocalInvalidated()){
         _dir = await buildDirectory()
         saveToLocal(_dir)
     } else {
         _dir = loadFromLocal()
     }
+
     return _dir
 }
 
 const loadFromLocal = () => {
-    return JSON.parse(localStorage.getItem(config.persistence.key_name))
+    return JSON.parse(localStorage.getItem(config.getValue("directory.persistence.keyname")))
 }
 
 const saveToLocal = newDir => {
-    localStorage.setItem(config.persistence.timestamp_key, getCurrentTimestamp())
-    localStorage.setItem(config.persistence.key_name, JSON.stringify(newDir))
+    localStorage.setItem(config.getValue("directory.persitence.timestampkey"), getCurrentTimestamp())
+    localStorage.setItem(config.getValue("directory.persistence.keyname"), JSON.stringify(newDir))
 }
 
 export const buildDirectory = async () => {
-    const base = config.base
-    const directoryFile = config.directory_file
-    const folderChar = config.folder_character
-    const metaChar = config.meta_name_character
+    const base = config.getValue("directory.base")
+    const directoryFile = config.getValue("directory.directoryfile")
+    const folderChar = config.getValue("directory.foldercharacter")
+    const metaChar = config.getValue("directory.metacharacter")
 
     return await walk(base, directoryFile, folderChar, metaChar)
 }
@@ -102,5 +104,5 @@ const hasContent = subTree => subTree && (Object.keys(subTree.folders).length > 
 
 // Local Storage Cache Invalidation calculation
 const getCurrentTimestamp = () => Math.floor(new Date().getTime() / 1000)
-const getTimeout          = () => config.persistence.invalidate
-const hasLocalInvalidated = () => ((+localStorage.getItem(config.persistence.timestamp_key)) + getTimeout()) < getCurrentTimestamp()
+const getTimeout          = () => config.getValue("directory.persistence.invalidate")
+const hasLocalInvalidated = () => ((+localStorage.getItem(config.getValue("directory.persistence.timestampkey"))) + getTimeout()) < getCurrentTimestamp()

@@ -1,13 +1,16 @@
 <script setup>
 import { useDirectoryStore } from '@store/DirectoryStore';
 import { calculate } from '../utilities/timeToRead';
-import { computed } from 'vue';
+import { computed, watch} from 'vue';
 
 let store = useDirectoryStore()
 
 let visible = computed(() => store.meta.type == "ARTICLE")
+let readTime = calculate(store.contentLength.value)
 
-let readTime = calculate(store.contentLength)
+watch(store, () => {
+    readTime = calculate(store.contentLength)
+})
 
 </script>
 <template>

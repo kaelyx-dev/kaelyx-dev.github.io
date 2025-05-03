@@ -1,11 +1,8 @@
 import { h } from 'vue'
 
-import config from '@config/config_shortCodes'
-
 import HelloWorld from "@module/Content/components/shortcodes/HelloWorld.vue"
 import Icon from "@module/Content/components/shortcodes/Icon.vue"
-
-const placeholderTagName = config.placeholder
+import { useConfigStore } from '@/stores/ConfigStore'
 
 const shortCodes = {
     "HELLOWORLD": HelloWorld,
@@ -13,8 +10,10 @@ const shortCodes = {
 }
 
 const regexPattern = () => {
-    const s = config.syntax.start
-    const e = config.syntax.end
+    const config = useConfigStore()
+
+    const s = config.getValue("content.shortcodes.syntax.start")
+    const e = config.getValue("content.shortcodes.syntax.end")
     return new RegExp(`${regexEscape(s)}\\s*(?<shortcode>\\w+)(?<args>(?:\\s+\\w+=\\w+)*)\\s*${regexEscape(e)}`,"g")
 }
 
@@ -23,8 +22,11 @@ const regexEscape = str => {
 }
 
 export const generateShortcodeMap = (text, removeUnknownShortcodes) => {
+    const config = useConfigStore()
+
     if(!text || text.length <= 0) return ""
     let shortCodes = findAllShortCodes(text)
+    const placeholderTagName = config.getValue("content.shortcodes.placeholder")
 
     shortCodes.forEach(shortcode => {
 
@@ -66,7 +68,12 @@ const findAllShortCodes = (text) => {
 }
 
 const createHyperscriptObject = (component, props) => (component) ? props ? h(component, props) : h(component) : undefined
-const generatePlaceholderNode = id => `<${placeholderTagName} data-id=\"${id}\"></${placeholderTagName}>`
+const generatePlaceholderNode = id => {
+    const config = useConfigStore()
+    const placeholderTagName = config.getValue("content.shortcodes.placeholder")
+    return `<${placeholderTagName} data-id=\"${id}\"></${placeholderTagName}>`
+
+}
 
 export const findShortcode = (id, list) => {
     return list.filter(e => e.id == id)[0]

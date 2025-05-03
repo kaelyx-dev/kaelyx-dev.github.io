@@ -1,9 +1,10 @@
 import { getDirectoryStructure } from '@/components/modules/Navigation/Utilities/walker'
 import { defineStore } from 'pinia'
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import getContent from '@module/Request/Utilities/getContent'
 import parser from '@module/Content/utilities/parser'
 import { parseMeta } from '@module/Content/utilities/meta'
+import { useConfigStore } from './ConfigStore'
 
 export const useDirectoryStore = defineStore('directory', () => {
 
@@ -12,9 +13,10 @@ export const useDirectoryStore = defineStore('directory', () => {
     let content = ref([])
     let contentLength = ref(0)
     let meta = ref({})
+    let loading = ref(false)
 
     const init = async permalink => {
-        let directory = await getDirectoryStructure();
+        let directory = await getDirectoryStructure(useConfigStore());
         pages.value = directory
 
         if(permalink) {
@@ -32,7 +34,7 @@ export const useDirectoryStore = defineStore('directory', () => {
     }
 
     const buildContent = async () => {
-        let file = await getContent(activeContentUrl.value)
+        let file = await getContent(useConfigStore().getValue("site.base"), activeContentUrl.value)
 
         let parsed = parser(file)
         content.value = parsed.content
@@ -49,6 +51,8 @@ export const useDirectoryStore = defineStore('directory', () => {
         buildContent()
     })
 
-    return { init, getDirectory, setActivePage, pages, activeContentUrl, content, meta, contentLength}
+    const isActiveContentUrlSet = computed(() => activeContentUrl.value.length > 0)
+
+    return { init, getDirectory, setActivePage, pages, activeContentUrl, content, meta, contentLength, loading, isActiveContentUrlSet}
 
 })

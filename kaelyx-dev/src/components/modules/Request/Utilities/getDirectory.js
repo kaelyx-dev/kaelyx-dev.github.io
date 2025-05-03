@@ -1,12 +1,18 @@
 import axios from 'axios'
-import config from '@config/config_requester.json'
+import { useConfigStore } from '@/stores/ConfigStore'
+
 
 export default async (directoryPath, dirFileName) => {
+    const config = useConfigStore()
+
     let res
     try {
         if(directoryPath == "/") directoryPath = ""
-        let getReqPath = config.base + (directoryPath ?? "") + dirFileName
+
+        let getReqPath = config.getValue("site.base") + (directoryPath ?? "") + dirFileName
+
         res = await axios(getReqPath)
+
     }catch(error){
         res = error
     }

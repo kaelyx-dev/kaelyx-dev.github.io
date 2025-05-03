@@ -1,17 +1,24 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 
 import { useDirectoryStore } from '@store/DirectoryStore';
 import { useToastStore } from '@store/toastStore'
+import { useConfigStore } from '@/stores/ConfigStore';
 
 import { encodePermaLink } from '../utilities/permalink';
 
 import Modal from '@core/Modal.vue';
-import config from '@config/config_contentParser'
+
+const config = useConfigStore()
 
 let store = useDirectoryStore()
 let visible = computed(() => store.meta.type == "ARTICLE")
-let permalink = window.location.origin + `/?${config.permalink.queryKey}=` + encodePermaLink(store.activeContentUrl)
+
+let permalink = window.location.origin + `/?${config.getValue("content.permalink.querykey")}=` + encodePermaLink(store.activeContentUrl)
+
+watch(store, () => {
+    permalink = window.location.origin + `/?${config.getValue("content.permalink.querykey")}=` + encodePermaLink(store.activeContentUrl)
+})
 
 const toastStore = useToastStore()
 const permalinkToClipboard  = async () => {
@@ -22,7 +29,6 @@ const permalinkToClipboard  = async () => {
         toastStore.createToast('Failed to copy to clipboard')
     }
 }
-
 
 </script>
 <template>

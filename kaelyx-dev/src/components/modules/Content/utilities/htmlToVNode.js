@@ -1,10 +1,12 @@
+import { useConfigStore } from "@/stores/ConfigStore"
 import { findShortcode, generateShortcodeMap } from "./shortcode"
-import config from '@config/config_contentParser'
 
 import { h } from "vue"
 
+
 export default htmlString => {
-    const content = config.shortcodes.enabled ? generateShortcodeMap(htmlString, config.shortcodes.removeUnknown) : htmlString
+    const config = useConfigStore()
+    const content = config.getValue("content.shortcodes.enabled") ? generateShortcodeMap(htmlString, config.getValue("content.shortcodes.removeunknown")) : htmlString
 
     const vnodes = parseHtmlToVNodes(content.text, content.placeholder, content.map)
     return vnodes.filter(e => (typeof e) === "object" )

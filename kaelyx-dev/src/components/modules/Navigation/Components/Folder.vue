@@ -15,7 +15,18 @@ const toggle = () => isClosed.value = !isClosed.value
 
 </script>
 <template>
-    <p @click="toggle" class="folder-name"><input type="checkbox" class="folder-checkbox" v-if="!root" v-model="isClosed" /><span :class="{selected : directory.activeContentUrl.startsWith(folder.link) && isClosed}">{{ folder.metaName }}</span></p>
+    <p @click="toggle" class="folder-name">
+        <input
+            type="checkbox"
+            class="folder-checkbox"
+            v-if="!root" v-model="isClosed"
+        />
+        <span
+            :class="{selected : directory.activeContentUrl.startsWith(folder.link) && isClosed}"
+        >
+            {{ folder.metaName }}
+        </span>
+    </p>
     <ul class="nav-tree" :class="{closed : isClosed}">
         <li v-if="Object.keys(folder.folders).length > 0" v-for="(subfolder, index) in folder.folders" :key="index">
             <Folder :folder="subfolder"/>

@@ -1,6 +1,7 @@
-import config from '@config/config_contentParser'
+import { useConfigStore } from '@/stores/ConfigStore'
 
 export const calculate = wordCount => {
-    let wpm = config.timeToRead.wpm
+    const config = useConfigStore()
+    let wpm = config.getValue("content.timetoread.wpm")
     return Math.ceil(wordCount / wpm)
 }

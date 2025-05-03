@@ -1,15 +1,17 @@
+import { useConfigStore } from "@/stores/ConfigStore"
 import getQueryParams from "@utility/getQueryParams"
-import config from '@config/config_contentParser'
+
 
 export const getPermalinkQueryParam = () => {
+    const config = useConfigStore()
     let queryParams = getQueryParams()
     if(Object.keys(queryParams).length == 0) return
-    return decodePermalink(queryParams[config.permalink.queryKey])
+    return decodePermalink(queryParams[config.getValue("content.permalink.querykey")])
 }
 
 export const decodePermalink = encodedLink => {
-
-    switch(config.permalink.encoding.toUpperCase()){
+    const config = useConfigStore()
+    switch(config.getValue("content.permalink.encoding").toUpperCase()){
         case "BASE64": return decodeURIComponent(atob(encodedLink))
         case "PLAIN":
         default: return encodedLink
@@ -17,7 +19,8 @@ export const decodePermalink = encodedLink => {
 }
 
 export const encodePermaLink = unencodedLink => {
-    switch(config.permalink.encoding.toUpperCase()){
+    const config = useConfigStore()
+    switch(config.getValue("content.permalink.encoding").toUpperCase()){
         case "BASE64": return encodeURIComponent(btoa(unencodedLink))
         case "PLAIN":
         default: return unencodedLink

@@ -1,38 +1,45 @@
-import config from '@config/config_configHandler.json'
 import getConfigFile from '@module/Request/Utilities/getConfigFile'
+
+import baseConfig from '@config/site'
+
+import devConfig from '@config/dev'
 
 const CONFIG_LIST_DELIMITER = ";"
 const CONFIG_COMMENT_CHARACTER = "#"
 
 export default async () => {
-    let localConfig = localStorage.getItem(config.persistence.key_name)
-    let _config = {}
+    let config = getInitialConfig()
 
-    if(config.persistence.force_refresh || localConfig == null || hasLocalInvalidated()) {
-        _config = await loadFromRemote()
-    } else {
-        _config = loadFromLocal()
+    let localConfig = localStorage.getItem(config["config.persistence.keyname"])
+    let _config = config
+
+    if(config["config.persistence.forcerefresh"] || localConfig == null || hasLocalInvalidated()) _config = {..._config, ...(await loadFromRemote(_config))}
+    else  _config = {..._config, ...loadFromLocal(_config)}
+
+    if(Object.keys(devConfig).length > 0) {
+        _config = {..._config, ...devConfig}
     }
 
     Object.keys(_config).forEach(k => _config[k] = interpretValue(_config[k]))
+
     return _config
 }
 
-const loadFromLocal = () => {
+const loadFromLocal = config => {
     return JSON.parse(localStorage.getItem(config.persistence.key_name))
 }
 
-const loadFromRemote = async () => {
-    let remote = await getRemoteConfigFile()
+const loadFromRemote = async config => {
+    let remote = await getRemoteConfigFile(config)
 
-    saveToLocal(remote)
+    saveToLocal(config, remote)
 
     return remote
 }
 
-const saveToLocal = newConfig => {
-    localStorage.setItem(config.persistence.timestamp_key, getCurrentTimestamp())
-    localStorage.setItem(config.persistence.key_name, JSON.stringify(newConfig))
+const saveToLocal = (config, newConfig) => {
+    localStorage.setItem(config["config.persistence.timestampkey"], getCurrentTimestamp())
+    localStorage.setItem(config["config.persistence.keyname"], JSON.stringify(newConfig))
 }
 
 const interpretValue = value => {
@@ -43,8 +50,8 @@ const interpretValue = value => {
     return value
 }
 
-const getRemoteConfigFile = async () => {
-    let file = await getConfigFile(config.config_location)
+const getRemoteConfigFile = async config => {
+    let file = await getConfigFile(config, config["config.remote.location"])
     return parseConfigFile(file)
 }
 
@@ -63,7 +70,11 @@ const parseLine = line => {
     return {key: _a[0].trim(), value: _a[1].split(CONFIG_COMMENT_CHARACTER)[0].trim()}
 }
 
+const getInitialConfig = () => {
+    return parseConfigFile(baseConfig.value)
+}
+
 // Local Storage Cache Invalidation calculation
 const getCurrentTimestamp = () => Math.floor(new Date().getTime() / 1000)
-const getTimeout          = () => config.persistence.invalidate
-const hasLocalInvalidated = () => ((+localStorage.getItem(config.persistence.timestamp_key)) + getTimeout()) < getCurrentTimestamp()
+const getTimeout          = config => config["config.persistence.invalidate"]
+const hasLocalInvalidated = config => ((+localStorage.getItem(config["config.persistence.timestampkey"])) + getTimeout(config)) < getCurrentTimestamp()
