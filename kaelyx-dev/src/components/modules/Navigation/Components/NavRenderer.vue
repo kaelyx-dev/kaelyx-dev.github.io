@@ -7,7 +7,7 @@ const directory  = useDirectoryStore()
 
 </script>
 <template>
-    <ul class="nav-tree">
+    <ul class="tree">
         <p>/dev/kaelyx/</p>
         <li>
             <Folder :folder="directory.getDirectory()" :root="true"/>

@@ -27,7 +27,7 @@ const toggle = () => isClosed.value = !isClosed.value
             {{ folder.metaName }}
         </span>
     </p>
-    <ul class="nav-tree" :class="{closed : isClosed}">
+    <ul class="tree" :class="{closed : isClosed}">
         <li v-if="Object.keys(folder.folders).length > 0" v-for="(subfolder, index) in folder.folders" :key="index">
             <Folder :folder="subfolder"/>
         </li>
