@@ -4,7 +4,14 @@ import sanitise from "./sanitise"
 export default md => {
     marked.use({
         gfm: true,
-        renderer: {}
+        renderer: {
+            code(code) {
+                console.log(code)
+                return `
+                  <pre><code class="${code.lang ? `language-${code.lang}` :""}">${code.text}</code></pre>
+              `; 
+            }
+        }
     })
     
     md = removeZWC(md)
