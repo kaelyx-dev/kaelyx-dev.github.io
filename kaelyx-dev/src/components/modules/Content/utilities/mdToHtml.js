@@ -4,11 +4,7 @@ import sanitise from "./sanitise"
 export default md => {
     marked.use({
         gfm: true,
-        breaks: true,
-        renderer: {
-            image: image => makeImageSrcAbsolute(image.href,image.title,image.text),
-            code : code  => highlightCode(code.text, code.lang)
-        }
+        renderer: {}
     })
     
     md = removeZWC(md)
@@ -27,6 +23,6 @@ const makeImageSrcAbsolute = (href, title, text) => {
     return `<img ${href} ${title} ${text} /><p>HELLO WORLD</p>`
 }
 
-const highlightCode = (code, language) => {
-    return code
+const highlightCode = (code, infostring) => {
+    return "<h1>"+code + "</h1>"
 }

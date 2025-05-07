@@ -45,5 +45,8 @@
         margin-left: spacing.spacing('large');
     }
 
-
+    a{
+        cursor: pointer;
+        text-decoration: underline;
+    }
 }
