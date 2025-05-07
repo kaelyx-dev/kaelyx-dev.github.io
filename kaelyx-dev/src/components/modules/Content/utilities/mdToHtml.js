@@ -6,10 +6,10 @@ export default md => {
         gfm: true,
         renderer: {
             code(code) {
-                console.log(code)
-                return `
-                  <pre><code class="${code.lang ? `language-${code.lang}` :""}">${code.text}</code></pre>
-              `; 
+                return highlightCode(code)
+            },
+            image(image) {
+                return makeImageSrcAbsolute(image)
             }
         }
     })
@@ -22,7 +22,7 @@ export default md => {
 
 const removeZWC = md => md.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/,"")
 
-const makeImageSrcAbsolute = (href, title, text) => {
+const makeImageSrcAbsolute = ({href, title, text}) => {
     (href)  ? href  = `alt="${href}"`  : href  = ""
     (title) ? title = `alt="${title}"` : title = ""
     (text)  ? text  = `alt="${text}"`  : text  = ""
@@ -30,6 +30,9 @@ const makeImageSrcAbsolute = (href, title, text) => {
     return `<img ${href} ${title} ${text} /><p>HELLO WORLD</p>`
 }
 
-const highlightCode = (code, infostring) => {
-    return "<h1>"+code + "</h1>"
+const highlightCode = code => {
+    console.log(code)
+    return `
+      <pre><code class="${code.lang ? `language-${code.lang}` :""}">${code.text}</code></pre>
+  `; 
 }
