@@ -50,6 +50,8 @@ export const useDirectoryStore = defineStore('directory', () => {
         meta.value = parseMeta(newMeta)
     }
 
+    const getActiveContentDirectory = () => activeContentUrl.value.split("/").slice(0, -1).join("/")
+
     watch(activeContentUrl, newActiveContentUrl => {
         if(newActiveContentUrl == activeContentUrl) return
         buildContent()
@@ -57,6 +59,6 @@ export const useDirectoryStore = defineStore('directory', () => {
 
     const isActiveContentUrlSet = computed(() => activeContentUrl.value.length > 0)
 
-    return { init, getDirectory, setActivePage, pages, activeContentUrl, content, meta, contentLength, loading, isActiveContentUrlSet}
+    return { init, getDirectory, setActivePage, pages, activeContentUrl, content, meta, contentLength, loading, isActiveContentUrlSet,getActiveContentDirectory}
 
 })

@@ -1,19 +1,19 @@
 import { marked } from "marked"
 import sanitise from "./sanitise"
+import { useConfigStore } from "@store/ConfigStore"
+import { useDirectoryStore } from "@/stores/DirectoryStore"
 
 export default md => {
+    const renderer = new marked.Renderer();
+
+    renderer.code = code => highlightCode(code)
+    renderer.image  = image => makeImageSrcAbsolute(image)
+
     marked.use({
         gfm: true,
-        renderer: {
-            code(code) {
-                return highlightCode(code)
-            },
-            image(image) {
-                return makeImageSrcAbsolute(image)
-            }
-        }
+        renderer: renderer
     })
-    
+
     md = removeZWC(md)
     let html = marked.parse(md)
     let cleanHtml = sanitise(html)
@@ -22,17 +22,20 @@ export default md => {
 
 const removeZWC = md => md.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/,"")
 
-const makeImageSrcAbsolute = ({href, title, text}) => {
-    (href)  ? href  = `alt="${href}"`  : href  = ""
-    (title) ? title = `alt="${title}"` : title = ""
-    (text)  ? text  = `alt="${text}"`  : text  = ""
+const makeImageSrcAbsolute = (token) => {
+    const config = useConfigStore()
+    const directory = useDirectoryStore()
 
-    return `<img ${href} ${title} ${text} /><p>HELLO WORLD</p>`
-}
+    let href = token.href;
+
+    if (href && href.startsWith('./')) href = config.getValue("site.base") + directory.getActiveContentDirectory() + href.slice(1)
+
+    const alt = token.text || '';
+    const title = token.title ? ` title="${token.title}"` : '';
+
+    return `<img src="${href}" alt="${alt}"${title}/>`;
+};
 
 const highlightCode = code => {
-    console.log(code)
-    return `
-      <pre><code class="${code.lang ? `language-${code.lang}` :""}">${code.text}</code></pre>
-  `; 
+    return `<pre><code class="${code.lang ? `language-${code.lang}` :""}">${code.text}</code></pre>`;
 }

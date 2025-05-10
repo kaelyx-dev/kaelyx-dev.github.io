@@ -27,8 +27,13 @@ const convertNodeToVNode = (node, placeholder, shortcodes) => {
         if(sc && sc.component) return sc.component
     }
 
+    const attrs = {}
+    for (const attr of node.attributes) {
+        attrs[attr.name] = attr.value
+    }
+
     const children = Array.from(node.childNodes).map(e => convertNodeToVNode(e, placeholder, shortcodes))
-    return h(tag, {}, children)
+    return h(tag, attrs, children)
 }
 
 const parseHtmlToVNodes = (html, placeholder, shortcodes) => {
