@@ -57,4 +57,26 @@
         border: 2px solid white;
         background-color: colours.colour("gray-1");
     }
+
+    img{
+        max-height: 200px;
+        object-fit: contain;
+    }
+    .image-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        figure {
+            padding: spacing.spacing("tiny");
+            margin: spacing.spacing("tiny");
+            width: fit-content;
+            border: 2px solid white;
+            display: flex;
+            flex-direction: column;
+            figcaption {
+                padding-top: spacing.spacing("tiny");
+                font-size: x-small;
+            }
+        }
+    }
 }

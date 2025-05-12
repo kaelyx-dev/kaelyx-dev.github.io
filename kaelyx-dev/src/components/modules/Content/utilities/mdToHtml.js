@@ -23,6 +23,7 @@ export default md => {
 const removeZWC = md => md.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/,"")
 
 const makeImageSrcAbsolute = (token) => {
+    console.log(token)
     const config = useConfigStore()
     const directory = useDirectoryStore()
 
@@ -31,9 +32,12 @@ const makeImageSrcAbsolute = (token) => {
     if (href && href.startsWith('./')) href = config.getValue("site.base") + directory.getActiveContentDirectory() + href.slice(1)
 
     const alt = token.text || '';
-    const title = token.title ? ` title="${token.title}"` : '';
 
-    return `<img src="${href}" alt="${alt}"${title}/>`;
+    const title = token.title ? `${token.title}` : '';
+
+    if(!title) return `<img src="${href}" alt="${alt}"/>`
+    else return `<div class="image-wrapper"><figure><img src="${href}" alt="${alt}"${title}/><figcaption>${title}</figcaption></figure></div>`;
+
 };
 
 const highlightCode = code => {
