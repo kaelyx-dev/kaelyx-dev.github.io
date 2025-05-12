@@ -61,6 +61,7 @@
     img{
         max-height: 200px;
         object-fit: contain;
+        cursor: zoom-in;
     }
     .image-wrapper {
         display: flex;
@@ -75,7 +76,12 @@
             flex-direction: column;
             figcaption {
                 padding-top: spacing.spacing("tiny");
-                font-size: x-small;
+                font-size: small;
+            }
+        }
+        .modal-overlay{
+            a {
+                text-decoration: none;
             }
         }
     }

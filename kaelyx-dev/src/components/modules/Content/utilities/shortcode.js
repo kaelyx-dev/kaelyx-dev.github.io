@@ -4,11 +4,13 @@ import HelloWorld from "@module/Content/components/shortcodes/HelloWorld.vue"
 import Icon from "@module/Content/components/shortcodes/Icon.vue"
 import { useConfigStore } from '@/stores/ConfigStore'
 import Link from '@module/Content/components/shortcodes/Link.vue'
+import Image from '@module/Content/components/shortcodes/Image.vue'
 
 const shortCodes = {
     "HELLOWORLD": HelloWorld,
     "ICON": Icon,
-    "LINK": Link
+    "LINK": Link,
+    "IMAGE": Image
 }
 
 const regexPattern = () => {
@@ -16,7 +18,8 @@ const regexPattern = () => {
 
     const s = config.getValue("content.shortcodes.syntax.start")
     const e = config.getValue("content.shortcodes.syntax.end")
-    return new RegExp(`${regexEscape(s)}\\s*(?<shortcode>\\w+)(?<args>(?:\\s+\\w+=\\S+)*)\\s*${regexEscape(e)}`,"g")
+    // \\s*(?<shortcode>\\w+)(?<args>(?:\\s+\\w+=(?:"[^"]*"|\\S+))*)\\s*
+    return new RegExp(`${regexEscape(s)}\\s*(?<shortcode>\\w+)(?<args>(?:\\s+\\w+=(?:"[^"]*"|\\S+))*)\\s*${regexEscape(e)}`,"g")
 }
 
 const regexEscape = str => {
@@ -52,12 +55,23 @@ const findAllShortCodes = (text) => {
 
         let _component = getComponent(name)
 
-        if(e.groups['args']) {
-            e.groups['args'].split(" ").map((e) => {
-                let _a = e.split("=")
-                return _props[_a[0]] = _a[1]
-            })
-        } else _props = undefined
+
+
+
+        if (e.groups['args']){
+            const argRegex = /\b(\w+)=("([^"]*)"|(\S+))/g;
+            let argMatch;
+            while ((argMatch = argRegex.exec(e.groups['args'])) !== null) {
+                _props[argMatch[1]] = argMatch[3] || argMatch[4];
+            }
+        }else _props = undefined
+
+        // if(e.groups['args']) {
+        //     e.groups['args'].split(" ").map((e) => {
+        //         let _a = e.split("=")
+        //         return _props[_a[0]] = _a[1]
+        //     })
+        // } else _props = undefined
         return {
             id          : _id,
             name        : name,

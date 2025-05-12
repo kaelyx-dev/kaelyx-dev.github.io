@@ -5,7 +5,6 @@ import getContent from '@module/Request/Utilities/getContent'
 import parser from '@module/Content/utilities/parser'
 import { parseMeta } from '@module/Content/utilities/meta'
 import { useConfigStore } from './ConfigStore'
-
 export const useDirectoryStore = defineStore('directory', () => {
 
     let pages = ref({})

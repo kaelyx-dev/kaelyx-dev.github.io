@@ -23,21 +23,28 @@ export default md => {
 const removeZWC = md => md.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/,"")
 
 const makeImageSrcAbsolute = (token) => {
-    console.log(token)
     const config = useConfigStore()
     const directory = useDirectoryStore()
 
     let href = token.href;
 
-    if (href && href.startsWith('./')) href = config.getValue("site.base") + directory.getActiveContentDirectory() + href.slice(1)
+    if (href && href.startsWith('./')) {
+        let base = config.getValue("site.base")
+        if(base.endsWith("/")) base = base.substring(0, base.length - 1)
+        href = base + directory.getActiveContentDirectory() + href.slice(1)
+    }
 
-    const alt = token.text || '';
+    const alt = `alt="${token.text}"` || '';
+    const title = token.title ? `title="${token.title}"` : '';
 
-    const title = token.title ? `${token.title}` : '';
-
-    if(!title) return `<img src="${href}" alt="${alt}"/>`
-    else return `<div class="image-wrapper"><figure><img src="${href}" alt="${alt}"${title}/><figcaption>${title}</figcaption></figure></div>`;
-
+    if(config.getValue("content.shortcodes.enabled")) {
+        const s = config.getValue("content.shortcodes.syntax.start")
+        const e = config.getValue("content.shortcodes.syntax.end")
+        return `${s}image source=${href} ${alt} ${title}${e}`
+    }else {
+        if(!title) return `<img src="${href}" alt="${alt}"/>`
+        else return `<div class="image-wrapper"><figure><img src="${href}" alt="${alt}"${title}/><figcaption>${title}</figcaption></figure></div>`;
+    }
 };
 
 const highlightCode = code => {

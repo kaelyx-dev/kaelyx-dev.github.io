@@ -7,7 +7,7 @@ import { useConfigStore } from '@/stores/ConfigStore';
 
 import { encodePermaLink } from '../utilities/permalink';
 
-import Modal from '@core/Modal.vue';
+import Modal from '@core/ModalButton.vue';
 
 const config = useConfigStore()
 

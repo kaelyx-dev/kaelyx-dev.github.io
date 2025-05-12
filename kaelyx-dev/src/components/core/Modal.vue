@@ -1,33 +1,17 @@
 <script setup>
-import { ref } from 'vue'
+import { watch } from 'vue';
 
-defineProps({
-  buttonText: {
-    type: String,
-    default: 'Open Modal'
-  },
-  buttonClass : {
-    type: String,
-    default: 'button--gray-3'
-  },
-  modalTitle : {
-    type: String,
-    default: 'Modal'
-  }
-})
 
-const showModal = ref(false)
-
-const baseButtonClass ="button "
+const {modalTitle} = defineProps({modalTitle: String})
+const model = defineModel({default: false})
 
 </script>
 <template>
-  <a @click="showModal = true" :class="baseButtonClass+buttonClass">{{ buttonText }}</a>
-  <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
+  <div v-if="model" class="modal-overlay" @click.self="model = false">
     <div class="modal-content">
       <div class="modal-header">
         <h2>{{ modalTitle }}</h2>
-        <a @click="showModal = false" class="button button--basic modal-close">&#x2716;</a>
+        <a @click="model = false" class="button button--basic modal-close">&#x2716;</a>
       </div>
       <div class="modal-main">
         <slot/>
