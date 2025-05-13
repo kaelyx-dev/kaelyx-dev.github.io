@@ -15,7 +15,7 @@ import Toasts from '@module/Content/components/Toasts.vue';
 
 const config = useConfigStore()
 const directory  = useDirectoryStore()
-console.log(window.location.pathname)
+
 let loading = ref(true)
 config.init().then(() => {
   directory.init(getPermalinkQueryParam()).then(() => {
@@ -23,9 +23,6 @@ config.init().then(() => {
     loading.value = false
   })
 })
-
-setPageTitle(config.getValue("site.title", "KAELYX").toUpperCase())
-
 </script>
 <template>
   <template v-if="!loading">

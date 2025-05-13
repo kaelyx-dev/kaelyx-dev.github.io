@@ -17,12 +17,15 @@
 }
 
 .toast {
+
+    display: none;
+
     max-width: 100%;
     padding: spacing.spacing("small");
 
     border: 2px solid white;
     background-color: black;
-    
+
     text-align: center;
     color: white;
     text-wrap: wrap;

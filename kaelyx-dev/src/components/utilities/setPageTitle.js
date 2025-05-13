@@ -1,1 +1,3 @@
-export default pageTitle => document.title = pageTitle
+export default pageTitle => {
+    document.title = pageTitle
+}
