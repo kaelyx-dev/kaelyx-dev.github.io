@@ -1,7 +1,8 @@
 <script setup>
 
 import Modal from '@/components/core/Modal.vue'
-import { ref } from 'vue'
+import axios from 'axios'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 const {source, title, alt} = defineProps({
     source: String,
@@ -10,16 +11,24 @@ const {source, title, alt} = defineProps({
 })
 
 let showModal = ref(false)
-
-const isDesktop = window.matchMedia("(hover: hover)").matches
-if(isDesktop){
-    console.log("ON DESKTOP")
-}
+let _source   = ref()
 
 const openDialog = () => {
-    console.log("CLICKED")
     showModal.value = true
 }
+
+let objUrl = null
+
+onMounted(async () => {
+    const response = await axios.get(source, {responseType: 'blob'})
+    objUrl = URL.createObjectURL(response.data)
+    _source.value = objUrl
+})
+onUnmounted(() => {
+    if(objUrl) {
+        URL.revokeObjectURL(objUrl)
+    }
+})
 
 </script>
 <template>
@@ -30,11 +39,11 @@ const openDialog = () => {
 </template>
     <div class="image-wrapper">
         <figure>
-            <img :src="source" :alt="alt" :data-title="title" @click="openDialog"/>
+            <img :src="_source" :alt="alt" :data-title="title" @click="openDialog"/>
             <figcaption>{{title}}</figcaption>
         </figure>
         <Modal :modalTitle="title" v-model="showModal">
-            <img :src="source" :alt="alt" :data-title="title"/>
+            <img :src="_source" :alt="alt" :data-title="title"/>
         </Modal>
     </div>
 </template>
