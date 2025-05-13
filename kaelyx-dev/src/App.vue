@@ -15,7 +15,7 @@ import Toasts from '@module/Content/components/Toasts.vue';
 
 const config = useConfigStore()
 const directory  = useDirectoryStore()
-
+console.log(window.location.pathname)
 let loading = ref(true)
 config.init().then(() => {
   directory.init(getPermalinkQueryParam()).then(() => {
