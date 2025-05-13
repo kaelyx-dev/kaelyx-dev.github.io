@@ -5,6 +5,7 @@ export default async (base, contentPath) => {
     if(contentPath == "") return
     let res
     try {
+        if(base.endsWith("/")) base = base.substring(0, base.length - 1)
         res = await axios(base + ( contentPath ?? ""))
     }catch(error){
         res = error
