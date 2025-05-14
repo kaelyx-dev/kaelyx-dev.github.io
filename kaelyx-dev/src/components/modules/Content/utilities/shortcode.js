@@ -5,12 +5,14 @@ import Icon from "@module/Content/components/shortcodes/Icon.vue"
 import { useConfigStore } from '@/stores/ConfigStore'
 import Link from '@module/Content/components/shortcodes/Link.vue'
 import Image from '@module/Content/components/shortcodes/Image.vue'
+import Console from '@module/Content/components/shortcodes/Console.vue'
 
 const shortCodes = {
     "HELLOWORLD": HelloWorld,
     "ICON": Icon,
     "LINK": Link,
-    "IMAGE": Image
+    "IMAGE": Image,
+    "CONSOLE" : Console
 }
 
 const regexPattern = () => {
@@ -18,7 +20,6 @@ const regexPattern = () => {
 
     const s = config.getValue("content.shortcodes.syntax.start")
     const e = config.getValue("content.shortcodes.syntax.end")
-    // \\s*(?<shortcode>\\w+)(?<args>(?:\\s+\\w+=(?:"[^"]*"|\\S+))*)\\s*
     return new RegExp(`${regexEscape(s)}\\s*(?<shortcode>\\w+)(?<args>(?:\\s+\\w+=(?:"[^"]*"|\\S+))*)\\s*${regexEscape(e)}`,"g")
 }
 
