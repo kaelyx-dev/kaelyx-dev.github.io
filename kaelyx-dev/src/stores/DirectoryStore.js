@@ -68,6 +68,14 @@ export const useDirectoryStore = defineStore('directory', () => {
         buildContent()
     })
 
+    const findDirectory = input => {
+        let result = null
+
+
+
+        return result
+    }
+
     const isActiveContentUrlSet = computed(() => activeContentUrl.value.length > 0)
 
     return { init, getDirectory, setActivePage, pages, activeContentUrl, content, meta, contentLength, loading, isActiveContentUrlSet,getActiveContentDirectory}

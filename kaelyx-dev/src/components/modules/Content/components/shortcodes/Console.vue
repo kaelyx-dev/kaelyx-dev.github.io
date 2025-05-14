@@ -1,10 +1,14 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import sanitise from '../../utilities/sanitise'
+import { useDirectoryStore } from '@/stores/DirectoryStore'
 
 let consoleCommand = ref()
 let consoleInput = ref()
 let consoleOutputLines = ref([])
+
+const directory = useDirectoryStore()
+let cwd = ref("/")
 
 onMounted(() => {
     consoleInput.value.focus()
@@ -32,7 +36,38 @@ const commands = {
             return output.length > 0 ? output : "Invalid Parameter"
         },
         help: "Returns what you print"
+    },
+    // TODO: Add Directory navigation
+    cwd : {
+        command: () => cwd.value,
+        help: "Prints the current working directory"
+    },
+    ls : {
+        command: () => {
+            const d = directory.getDirectory()
+            console.log(d)
+            let output = `${Object.keys(d.folders).map(e => `/${e}`).join(" ")} ${Object.keys(d.files).map(e => `${d.files[e].name}.${d.files[e].filetype}`).join(" ")}`
+            console.log(output)
+            return output
+        },
+        help: "Lists files in the current directory"
+    },
+    cd : {
+        command: input => {
+            if(input.startsWith("./") || input.startsWith("../")){
+                return "cwd or go back"
+            }
+            return cwd.value
+        },
+        help: "Change directory"
+    },
+    goto : {
+        command: input => {
+            return cwd.value
+        },
+        help: "opens a file on the site"
     }
+    // END TODO
 }
 
 const commandExists = command => commands[command] != undefined
@@ -53,7 +88,7 @@ const clearInput = () => {
     consoleCommand.value = ""
 }
 const getCommand = () => consoleInput.value.value;
-const addToScreen = output => consoleOutputLines.value.push(output);
+const addToScreen = output => `${consoleOutputLines.value.push(output)}`;
 
 const onPressEnter = () => {
     let command = getCommand()
@@ -69,5 +104,5 @@ const onPressEnter = () => {
         <li v-for="line in consoleOutputLines" v-html="line">
         </li>
     </ul>
-    <input type="text" v-model="consoleCommand" ref="consoleInput" @keyup.enter="onPressEnter"/>
+    <p><span>user@kaelyx.site:{{cwd}}$</span></p><input type="text" v-model="consoleCommand" ref="consoleInput" @keyup.enter="onPressEnter"/>
 </template>
