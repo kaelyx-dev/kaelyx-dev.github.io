@@ -133,6 +133,7 @@ const traverseHistory = direction => {
 }
 
 const addToHistory = input => {
+    if(history.value.length >= history_max) history.value.pop()
     history.value.unshift(input)
 }
 
