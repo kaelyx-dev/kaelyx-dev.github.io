@@ -18,14 +18,15 @@ export const useDirectoryStore = defineStore('directory', () => {
     const config = useConfigStore()
 
     const init = async permalink => {
+        console.log(window.location.hash)
         let directory = await getDirectoryStructure(config);
         pages.value = directory
         if(permalink) {
             setActivePage(permalink)
-        } else if(window.location.pathname == "/"){
+        } else if(window.location.hash.length == 0){
             setActivePage(await config.getValue("content.home"))
         } else {
-            setActivePage(window.location.pathname)
+            setActivePage(window.location.hash.slice(1))
         }
         await buildContent()
     }
@@ -50,7 +51,8 @@ export const useDirectoryStore = defineStore('directory', () => {
         content.value = parsed.content
         contentLength.value = parsed.length
 
-        window.history.pushState("", parsed.meta.title || activeContentUrl.value, activeContentUrl.value)
+        // window.history.pushState("", parsed.meta.title || activeContentUrl.value, activeContentUrl.value)
+        window.location.hash = activeContentUrl.value
 
         buildMeta(parsed.meta)
 
