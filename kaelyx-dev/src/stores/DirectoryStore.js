@@ -18,7 +18,6 @@ export const useDirectoryStore = defineStore('directory', () => {
     const config = useConfigStore()
 
     const init = async permalink => {
-        console.log(window.location.hash)
         let directory = await getDirectoryStructure(config);
         pages.value = directory
         if(permalink) {

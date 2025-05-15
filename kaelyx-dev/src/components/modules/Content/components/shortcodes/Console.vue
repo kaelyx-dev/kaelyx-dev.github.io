@@ -97,14 +97,45 @@ const getUser = () => {
 }
 
 const onPressEnter = () => {
+    history_ptr.value = 0
+
     let command = getCommand()
     clearInput()
+
+    addToHistory(command)
 
     if(command.toLowerCase() != "clear") addToScreen(getUser() +" "+ command)
 
     let result = handle(command.trim())
     if(result) addToScreen(""+result)
 }
+
+let history_max = 64
+let history = ref([])
+let history_ptr = ref(0)
+
+const HISTORY_BACKWARD = -1
+const HISTORY_FORWARD  = 1
+
+const historyBackward = () => traverseHistory(HISTORY_BACKWARD)
+const historyForward = () => traverseHistory(HISTORY_FORWARD)
+
+const traverseHistory = direction => {
+    switch(direction){
+        case HISTORY_BACKWARD:
+            if(history_ptr.value <= history.value.length && history_ptr.value <= history_max) history_ptr.value++
+            break;
+        case HISTORY_FORWARD:
+            if(history_ptr.value != 0) history_ptr.value--
+            break;
+    }
+    consoleCommand.value = history.value[history_ptr.value - 1] || ""
+}
+
+const addToHistory = input => {
+    history.value.unshift(input)
+}
+
 
 </script>
 <template>
@@ -116,6 +147,14 @@ const onPressEnter = () => {
     </div>
     <div class="console__input">
         <p class="console-input__cwd">{{ getUser() }}</p>
-        <input class="console-input__textinput" type="text" v-model="consoleCommand" ref="consoleInput" @keyup.enter="onPressEnter"/>
+        <input 
+            class="console-input__textinput" 
+            type="text" 
+            v-model="consoleCommand" 
+            ref="consoleInput" 
+            @keyup.enter = "onPressEnter"
+            @keyup.up    = "historyBackward"
+            @keyup.down  = "historyForward"
+            />
     </div>
 </template>
