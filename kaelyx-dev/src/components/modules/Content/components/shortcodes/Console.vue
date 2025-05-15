@@ -102,9 +102,14 @@ const onPressEnter = () => {
 
 </script>
 <template>
-    <ul id="consoleCommandOutputList">
-        <li v-for="line in consoleOutputLines" v-html="line">
-        </li>
-    </ul>
-    <p><span>user@kaelyx.site:{{cwd}}$</span></p><input type="text" v-model="consoleCommand" ref="consoleInput" @keyup.enter="onPressEnter"/>
+    <div class="console__output">
+        <ul id="consoleCommandOutputList">
+            <li v-for="line in consoleOutputLines" v-html="line">
+            </li>
+        </ul>
+    </div>
+    <div class="console__input">
+        <p class="console-input__cwd">user@kaelyx.site:{{cwd}}$</p>
+        <input class="console-input__textinput" type="text" v-model="consoleCommand" ref="consoleInput" @keyup.enter="onPressEnter"/>
+    </div>
 </template>
