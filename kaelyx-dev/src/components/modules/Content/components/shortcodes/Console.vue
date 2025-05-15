@@ -90,11 +90,17 @@ const clearInput = () => {
     consoleCommand.value = ""
 }
 const getCommand = () => consoleInput.value.value;
-const addToScreen = output => `${consoleOutputLines.value.push(output)}`;
+const addToScreen = output => `${consoleOutputLines.value.push(output)}`
+
+const getUser = () => {
+    return `user@kaelyx.site:${cwd.value}$`
+}
 
 const onPressEnter = () => {
     let command = getCommand()
     clearInput()
+
+    if(command.toLowerCase() != "clear") addToScreen(getUser() +" "+ command)
 
     let result = handle(command.trim())
     if(result) addToScreen(""+result)
@@ -109,7 +115,7 @@ const onPressEnter = () => {
         </ul>
     </div>
     <div class="console__input">
-        <p class="console-input__cwd">user@kaelyx.site:{{cwd}}$</p>
+        <p class="console-input__cwd">{{ getUser() }}</p>
         <input class="console-input__textinput" type="text" v-model="consoleCommand" ref="consoleInput" @keyup.enter="onPressEnter"/>
     </div>
 </template>
