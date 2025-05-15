@@ -64,11 +64,9 @@ const commands = {
         command: input => {
             input = parsePath(cwd.value, input)
             let res = directory.findFile(input)
-            if(res){
-                directory.setActivePage(res)
-            } else {
-                return "Could not find file..."
-            }
+            if(!res) return "Could not find file..."
+            directory.setActivePage(res)
+            return ""
         },
         help: "opens a file on the site"
     }
