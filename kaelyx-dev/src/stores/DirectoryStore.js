@@ -69,15 +69,43 @@ export const useDirectoryStore = defineStore('directory', () => {
     })
 
     const findDirectory = input => {
-        let result = null
-
-
-
-        return result
+        const parts = input.split("/").filter(p => p.length > 0);
+        let current = getDirectory();
+    
+        for (const part of parts) {
+            if (!current || !current.folders || !current.folders[part]) {
+                return undefined;
+            }
+            current = current.folders[part];
+        }
+        return current;
+    };
+    
+    const findFile = input => {
+        let folders = input.split("/").filter(e => e.length > 0)
+        let file = folders.pop().split(".")[0]
+        folders = folders.join("/")
+        let _f = findDirectory(folders).files
+        if(Object.keys(_f).includes(file)) return _f[file].link
+        else return undefined
     }
 
     const isActiveContentUrlSet = computed(() => activeContentUrl.value.length > 0)
 
-    return { init, getDirectory, setActivePage, pages, activeContentUrl, content, meta, contentLength, loading, isActiveContentUrlSet,getActiveContentDirectory}
+    return { 
+        init, 
+        getDirectory, 
+        setActivePage, 
+        pages, 
+        activeContentUrl, 
+        content, 
+        meta, 
+        contentLength, 
+        loading, 
+        isActiveContentUrlSet,
+        getActiveContentDirectory,
+        findDirectory,
+        findFile
+    }
 
 })

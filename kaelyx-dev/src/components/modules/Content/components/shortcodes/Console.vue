@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue'
 import sanitise from '../../utilities/sanitise'
 import { useDirectoryStore } from '@/stores/DirectoryStore'
+import { parsePath } from '../../utilities/console'
 
 let consoleCommand = ref()
 let consoleInput = ref()
@@ -37,37 +38,40 @@ const commands = {
         },
         help: "Returns what you print"
     },
-    // TODO: Add Directory navigation
     cwd : {
         command: () => cwd.value,
         help: "Prints the current working directory"
     },
     ls : {
         command: () => {
-            const d = directory.getDirectory()
-            console.log(d)
+            const d = directory.findDirectory(cwd.value)
             let output = `${Object.keys(d.folders).map(e => `/${e}`).join(" ")} ${Object.keys(d.files).map(e => `${d.files[e].name}.${d.files[e].filetype}`).join(" ")}`
-            console.log(output)
             return output
         },
         help: "Lists files in the current directory"
     },
     cd : {
         command: input => {
-            if(input.startsWith("./") || input.startsWith("../")){
-                return "cwd or go back"
-            }
-            return cwd.value
+            input = parsePath(cwd.value, input)
+            let res = directory.findDirectory(input)
+            if(!res) return `Cannot fild the directory specified: ${sanitise(input)}`
+            cwd.value = res.link || "/"
+            return ""
         },
         help: "Change directory"
     },
-    goto : {
+    open : {
         command: input => {
-            return cwd.value
+            input = parsePath(cwd.value, input)
+            let res = directory.findFile(input)
+            if(res){
+                directory.setActivePage(res)
+            } else {
+                return "Could not find file..."
+            }
         },
         help: "opens a file on the site"
     }
-    // END TODO
 }
 
 const commandExists = command => commands[command] != undefined
@@ -94,7 +98,7 @@ const onPressEnter = () => {
     let command = getCommand()
     clearInput()
 
-    let result = handle(command.toLowerCase().trim())
+    let result = handle(command.trim())
     if(result) addToScreen(""+result)
 }
 
