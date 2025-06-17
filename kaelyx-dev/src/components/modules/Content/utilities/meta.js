@@ -4,7 +4,7 @@ const metaObj = {
     date         : undefined,
     keywords     : undefined,
     showpermalink: undefined,
-    showreadtime : undefined
+    showreadtime : undefined,
 }
 
 const generateDefaultMetaObj = () => {
@@ -24,9 +24,18 @@ export const parseMeta = meta => {
         newMeta[e.toLowerCase()] = meta[e.toLowerCase()]
     })
 
+    // if the type is article or blog, show permalink and read time
     if(meta.type.toUpperCase() == "ARTICLE") {
         newMeta.showpermalink = true
         newMeta.showreadtime  = true
     }
+
     return newMeta
 }
+// Template for meta data in markdown files
+//<!-- Title: Readme.md -->
+//<!-- Type: ARTICLE -->
+//<!-- Date: 24/04/2025 -->
+//<!-- Keywords: a,b,c,d,e-->
+//<!-- ShowPermalink: true -->
+//<!-- ShowReadTime: true -->

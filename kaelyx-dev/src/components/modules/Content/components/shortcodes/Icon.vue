@@ -1,8 +1,11 @@
 <script setup>
-// props:
-// icon name
-// link
-// class override
+
+const props = defineProps({
+    name: String,
+    link: String,
+    classOverride: String,
+    styleOverride: String
+})
 </script>
 <template>
     <p>Icon :)</p>
