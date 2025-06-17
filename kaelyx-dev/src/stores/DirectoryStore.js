@@ -50,7 +50,6 @@ export const useDirectoryStore = defineStore('directory', () => {
         content.value = parsed.content
         contentLength.value = parsed.length
 
-        // window.history.pushState("", parsed.meta.title || activeContentUrl.value, activeContentUrl.value)
         window.location.hash = activeContentUrl.value
 
         buildMeta(parsed.meta)

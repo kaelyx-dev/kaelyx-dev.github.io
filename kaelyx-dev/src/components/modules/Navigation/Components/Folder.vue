@@ -1,7 +1,8 @@
 <script setup>
-import { defineProps, ref } from 'vue';
-import File from './File.vue';
-import { useDirectoryStore } from '@/stores/DirectoryStore';
+import { defineProps, ref } from 'vue'
+import File from './File.vue'
+import Link from './Link.vue'
+import { useDirectoryStore } from '@/stores/DirectoryStore'
 
 let directory = useDirectoryStore()
 
@@ -12,6 +13,7 @@ const { folder,root } = defineProps({
 
 const isClosed = ref(!root)
 const toggle = () => isClosed.value = !isClosed.value
+
 
 </script>
 <template>
@@ -32,7 +34,10 @@ const toggle = () => isClosed.value = !isClosed.value
             <Folder :folder="subfolder"/>
         </li>
         <li v-if="Object.keys(folder.files).length > 0" v-for="(file, index) in folder.files" :key="index">
-                <File :file="file"/>
+            <File :file="file"/>
+        </li>
+        <li v-if="Object.keys(folder.links).length > 0" v-for="(link, index) in folder.links" :key="index">
+            <Link :link="link"/>
         </li>
     </ul>
 </template>
