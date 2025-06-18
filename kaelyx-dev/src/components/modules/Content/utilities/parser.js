@@ -14,8 +14,10 @@ export default md => {
     getAllMetaFields(md).forEach(e => {
         _content.meta[e.name] = e.value
     })
-
-    _content.content = htmlToVNode(mdToHtml(md))
+    
+    let _s1 = mdToHtml(md);
+    let _s2 = htmlToVNode(_s1)
+    _content.content = _s2
     return _content
 }
 

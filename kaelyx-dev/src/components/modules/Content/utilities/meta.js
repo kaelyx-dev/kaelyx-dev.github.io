@@ -33,9 +33,9 @@ export const parseMeta = meta => {
     return newMeta
 }
 // Template for meta data in markdown files
-//<!-- Title: Readme.md -->
-//<!-- Type: ARTICLE -->
-//<!-- Date: 24/04/2025 -->
-//<!-- Keywords: a,b,c,d,e-->
-//<!-- ShowPermalink: true -->
-//<!-- ShowReadTime: true -->
+// <!-- Title: Readme.md -->
+// <!-- Type: ARTICLE -->
+// <!-- Date: 24/04/2025 -->
+// <!-- Keywords: a,b,c,d,e-->
+// <!-- ShowPermalink: true -->
+// <!-- ShowReadTime: true -->

@@ -6,8 +6,9 @@ import { useDirectoryStore } from "@/stores/DirectoryStore"
 export default md => {
     const renderer = new marked.Renderer();
 
-    renderer.code = code => highlightCode(code)
-    renderer.image  = image => makeImageSrcAbsolute(image)
+    renderer.code  = code => highlightCode(code)
+    renderer.image = image => makeImageSrcAbsolute(image)
+    renderer.link  = link => handleLinksIfInShortcodes(link)
 
     marked.use({
         gfm: true,
@@ -17,6 +18,7 @@ export default md => {
     md = removeZWC(md)
     let html = marked.parse(md)
     let cleanHtml = sanitise(html)
+
     return cleanHtml
 }
 
@@ -50,3 +52,13 @@ const makeImageSrcAbsolute = (token) => {
 const highlightCode = code => {
     return `<pre><code class="${code.lang ? `language-${code.lang}` :""}">${code.text}</code></pre>`;
 }
+
+const handleLinksIfInShortcodes = link => {
+    if(linkIsText(link)) return link.raw
+
+    let href = `href="${link.href}"`
+    let text = `${link.text || link.href}`
+    return `<a ${href}>${text}</a>`
+}
+
+const linkIsText = link => link.raw == link.text && link.raw == link.href

@@ -6,13 +6,17 @@ import { useConfigStore } from '@/stores/ConfigStore'
 import Link from '@module/Content/components/shortcodes/Link.vue'
 import Image from '@module/Content/components/shortcodes/Image.vue'
 import Console from '@module/Content/components/shortcodes/Console.vue'
+import Project from '@module/Content/components/shortcodes/Project.vue'
+import ProjectTechStack from '@module/Content/components/shortcodes/ProjectTechStack.vue'
 
 const shortCodes = {
     "HELLOWORLD": HelloWorld,
     "ICON": Icon,
     "LINK": Link,
     "IMAGE": Image,
-    "CONSOLE" : Console
+    "CONSOLE" : Console,
+    "PROJECT" : Project,
+    "PROJECTTECHSTACK" : ProjectTechStack
 }
 
 const regexPattern = () => {

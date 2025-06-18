@@ -39,7 +39,7 @@ $locations : (
 
 @each $name, $value in $coloursMap {
     @each $location, $val in $locations {
-        .button--#{$name}{
+        .button-#{location}--#{$name}{
             #{$val}: #{$value};
         }
     }
