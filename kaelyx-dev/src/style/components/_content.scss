@@ -72,10 +72,12 @@
     }
 
     pre {
-        margin: spacing.spacing("small");
-        padding: spacing.spacing("small");
+        margin: spacing.spacing("medium") 0px;
+        padding: spacing.spacing("medium");
         border: 2px solid white;
-        background-color: colours.colour("gray-1");
+        background-color: colours.colour("black");
+        box-shadow: 4px 4px 0px 0px colours.colour("gray-3");
+
     }
 
     img{
@@ -137,14 +139,15 @@
         box-sizing: border-box;
 
         &__header{
-            
+
         }
 
         &__section {
             &-title{
-                background: colours.colour("gray-2");
+                background: colours.colour("gray-1");
                 padding: spacing.spacing('tiny');
                 margin-bottom: spacing.spacing('tiny');
+                // border: $border;
                 box-shadow: 2px 2px 0px 0px colours.colour("gray-3");
             }
             &-content{
@@ -153,21 +156,22 @@
         }
 
         &__body{
-            width: 50%;
-            margin-left: auto;  
+            margin-left: auto;
             margin-right: auto;
 
             // border: $border;
             display: flex;
             flex-direction: column;
             gap: $spacing;
-            padding: $spacing;
-            border: $border;
-            box-shadow: $shadow;
+            // padding: $spacing;
+            // border: $border;
+            // box-shadow: $shadow;
 
-            @include mq.mq($until: wide){
-                width: 100%;
-            }
+            padding-bottom: spacing.spacing('medium');
+            border-bottom: $border;
+
+            padding-top: spacing.spacing('medium');
+            border-top: $border;
         }
 
         &__overview-title {
@@ -176,12 +180,10 @@
 
         &__desc {
             background-color: $bgColour;
-            padding: $spacing;
         }
 
         &__techstack{
             background-color: $bgColour;
-            padding: $spacing;
         }
 
         &__links{
@@ -195,7 +197,6 @@
             }
 
             background-color: $bgColour;
-            padding: $spacing;
         }
 
         &__link{
@@ -203,20 +204,19 @@
             padding: 0;
         }
     }
-
-    p:has(.project-card) + p {
-        margin-top: spacing.spacing('large');
-    } 
     .tech-stack {
         &__list{
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: spacing.spacing('huge');
+            padding: spacing.spacing('tiny');
             list-style-type: none;
-            margin: 0;
-            padding: 0;
+
             &-item{
                 margin: 0;
                 padding: 0;
             }
         }
     }
-
 }

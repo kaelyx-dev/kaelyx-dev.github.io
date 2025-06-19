@@ -24,9 +24,6 @@ const technology = computed(() => "Technolog" + (techStack.value.length == 1 || 
             <h1>{{ props.name || "Project Unknown" }}</h1>
         </div>
         <div class="project-card__body">
-            <div class="project-card__overview-title">
-                <span>Project Overview:</span>
-            </div>
             <div class="project-card__desc">
                 <div class="project-card__section-title">
                     <span >Short Description:</span>
