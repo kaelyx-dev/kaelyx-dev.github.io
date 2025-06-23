@@ -8,6 +8,7 @@ import Image from '@module/Content/components/shortcodes/Image.vue'
 import Console from '@module/Content/components/shortcodes/Console.vue'
 import Project from '@module/Content/components/shortcodes/Project.vue'
 import ProjectTechStack from '@module/Content/components/shortcodes/ProjectTechStack.vue'
+import ClearCookieConsent from '@module/Content/components/shortcodes/ClearCookieConsent.vue'
 
 const shortCodes = {
     "HELLOWORLD": HelloWorld,
@@ -16,7 +17,8 @@ const shortCodes = {
     "IMAGE": Image,
     "CONSOLE" : Console,
     "PROJECT" : Project,
-    "PROJECTTECHSTACK" : ProjectTechStack
+    "PROJECTTECHSTACK" : ProjectTechStack,
+    "CLEARCOOKIECONSENT" : ClearCookieConsent
 }
 
 const regexPattern = () => {

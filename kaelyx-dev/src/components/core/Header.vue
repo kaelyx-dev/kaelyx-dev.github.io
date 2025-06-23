@@ -1,6 +1,7 @@
 <script setup>
 import ButtonBar from '@core/ButtonBar.vue';
 import { useConfigStore } from '@/stores/ConfigStore';
+
 const config = useConfigStore()
 
 </script>

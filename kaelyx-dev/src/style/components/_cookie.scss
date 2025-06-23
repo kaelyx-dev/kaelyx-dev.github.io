@@ -1,0 +1,36 @@
+
+@use '../variables/spacing';
+@use '../variables/colours';
+
+.cookie-banner {
+    padding: spacing.spacing('medium');
+    margin: spacing.spacing('medium');
+    border: 2px solid colours.colour('white');
+    background-color: black;
+
+    &__overlay {
+        z-index: 99999;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        backdrop-filter: blur(2px);
+        padding-bottom: spacing.spacing('huge');
+    }
+
+    &__content {
+
+    }
+
+    &__buttons {
+        padding: spacing.spacing('medium');
+        display: flex;
+        flex-direction: row;
+        gap: spacing.spacing('medium');
+    }
+}
