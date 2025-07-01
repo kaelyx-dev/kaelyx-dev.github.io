@@ -1,6 +1,6 @@
 import { getDirectoryStructure } from '@/components/modules/Navigation/Utilities/walker'
 import { defineStore } from 'pinia'
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, inject } from 'vue'
 import getContent from '@module/Request/Utilities/getContent'
 import parser from '@module/Content/utilities/parser'
 import { parseMeta } from '@module/Content/utilities/meta'

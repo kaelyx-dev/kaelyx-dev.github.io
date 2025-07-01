@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, inject } from 'vue';
 import { getRandomColour } from '../utilities/getColour';
 import getColour from '../utilities/getColour';
 
@@ -13,7 +13,14 @@ onMounted(() => {
     colour.value.text       = _c.text
 })
 
+const posthog = inject('posthog')
+const externalLinkClicked = inject('posthogExternalLink')
+
+const onClick = () => {
+    externalLinkClicked(posthog, props.button.link)
+}
+
 </script>
 <template>
-    <a target="" class="button" :class="`button--${colour.background} text--${colour.text}`" :href="props.button.link">{{ props.button.text }}</a>
+    <a @click="onClick" class="button" :class="`button--${colour.background} text--${colour.text}`" :href="props.button.link">{{ props.button.text }}</a>
 </template>

@@ -9,11 +9,22 @@ const {link, name} = defineProps({
     name: String
 })
 
+
+const posthog = inject('posthog')
+const externalLinkClicked = inject('posthogExternalLink')
+const pageViewEvent = inject('posthogPageview')
+
 const localLink = computed(() => link.startsWith("/"))
 
 const onClick = () => {
+    pageViewEvent(posthog, link)
     directory.setActivePage(link)
 }
+
+const onClickExternal = () => {
+    externalLinkClicked(posthog, link)
+}
+
 
 </script>
 <template>
@@ -21,6 +32,6 @@ const onClick = () => {
         <a @click="onClick" target="_blank">{{ name }}</a>
     </template>
     <template v-else>
-        <a :href="link" target="_blank">{{ name }}</a>
+        <a @click="onClickExternal" :href="link" target="_blank">{{ name }}</a>
     </template>
 </template>

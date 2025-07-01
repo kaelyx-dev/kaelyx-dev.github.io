@@ -13,6 +13,7 @@ import { getPermalinkQueryParam } from '@module/Content/utilities/permalink';
 import Toasts from '@module/Content/components/Toasts.vue';
 import GlobalProvider from './components/modules/GlobalProvider/GlobalProvider.vue';
 import Cookie from './components/core/Cookie.vue';
+import ScriptProvider from './components/core/ScriptProvider.vue';
 
 const config = useConfigStore()
 const directory  = useDirectoryStore()
@@ -26,17 +27,18 @@ config.init().then(() => {
 })
 </script>
 <template>
-  <GlobalProvider>
-    <template v-if="!loading">
-      <Cookie/>
-      <Header/>
-      <main class="content">
-        <NavigationPanel/>
-        <ContentPanel/>
-      </main>
-      <Footer/>
-      <Toasts/>
+  <template v-if="!loading">
+      <GlobalProvider>
+        <ScriptProvider/>
+        <Cookie/>
+        <Header/>
+        <main class="content">
+          <NavigationPanel/>
+          <ContentPanel/>
+        </main>
+        <Footer/>
+        <Toasts/>
+      </GlobalProvider>
     </template>
     <Loader v-else/>
-  </GlobalProvider>
 </template>
