@@ -18,8 +18,8 @@ const config = useConfigStore()
     config.getValue("posthog.key") ?? "",
         {
             api_host: "https://eu.i.posthog.com",
-            opt_out_persistence_by_default: config.getValue("posthog.anonymise") ?? true,
-            disable_persistance: config.getValue("posthog.anonymise") ?? true,
+            opt_out_persistence_by_default: true,
+            disable_persistance: true,
             persistance: "memory",
             capture_pageview: false,
             autocapture: false,
