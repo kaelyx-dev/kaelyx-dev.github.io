@@ -1,6 +1,6 @@
 <script setup>
 import { useDirectoryStore } from '@/stores/DirectoryStore';
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 
 const directory = useDirectoryStore()
 
