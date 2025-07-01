@@ -20,7 +20,9 @@ const initGtag = () => {
 }
 
 onMounted(() => {
-    if(userHasResponded.value) initGtag()
+    let enabled = config.getValue('google.gtag.enabled')
+    if(!enabled) visible.value = false
+    if(userHasResponded.value && enabled) initGtag()
 })
 
 const consent = () => {
