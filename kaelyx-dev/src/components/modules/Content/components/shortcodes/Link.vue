@@ -25,7 +25,6 @@ const onClickExternal = () => {
     externalLinkClicked(posthog, link)
 }
 
-
 </script>
 <template>
     <template v-if="localLink">

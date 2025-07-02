@@ -19,8 +19,8 @@ const config = useConfigStore()
         {
             api_host: "https://eu.i.posthog.com",
             opt_out_persistence_by_default: true,
-            disable_persistance: true,
-            persistance: "memory",
+            disable_persistence: true,
+            persistence: "memory",
             capture_pageview: false,
             autocapture: false,
             capture_performance: {
