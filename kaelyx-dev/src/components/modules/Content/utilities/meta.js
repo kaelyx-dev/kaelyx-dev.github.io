@@ -25,7 +25,7 @@ export const parseMeta = meta => {
     })
 
     // if the type is article or blog, show permalink and read time
-    if(meta.type.toUpperCase() == "ARTICLE") {
+    if(meta.type && meta.type.toUpperCase() == "ARTICLE") {
         newMeta.showpermalink = true
         newMeta.showreadtime  = true
     }

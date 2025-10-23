@@ -69,6 +69,24 @@ const commands = {
             return ""
         },
         help: "opens a file on the site"
+    },
+    cowsay : {
+        command: input => {
+            const message = sanitise(input) || "Moo"
+            const line = "-".repeat(message.length)
+            const cow = `<pre class="no-style">
+             /${line}\\
+            | ${message} |
+             \\${line}/
+                \\   ^__^
+                 \\  (oo)\\_______
+                    (__)\\       )\\/\\
+                        ||----w |
+                        ||     ||
+            </pre>`
+            return cow
+        },
+        help: "Displays an ascii cow saying your message"
     }
 }
 
@@ -83,7 +101,7 @@ const handle = unprocessedCommand => {
     let [command, args] = parseArgCommand(unprocessedCommand)
     if (commandExists(command)) {
         return commands[command].command(args)
-    } else return `Unknown Command`
+    } else return `Unknown Command -- type 'help' for a list of commands.`
 }
 
 const clearInput = () => {
@@ -93,7 +111,7 @@ const getCommand = () => consoleInput.value.value;
 const addToScreen = output => `${consoleOutputLines.value.push(output)}`
 
 const getUser = () => {
-    return `user@kaelyx.site:${cwd.value}$`
+    return `visitor@${new URL(location.href).hostname}:${cwd.value}$`
 }
 
 const onPressEnter = () => {
@@ -142,20 +160,20 @@ const addToHistory = input => {
 <template>
     <div class="console__output">
         <ul id="consoleCommandOutputList">
-            <li v-for="line in consoleOutputLines" v-html="line">
+            <li v-for="(line, index) in consoleOutputLines" v-html="line" :key="index">
             </li>
         </ul>
     </div>
     <div class="console__input">
         <p class="console-input__cwd">{{ getUser() }}</p>
-        <input 
-            class="console-input__textinput" 
-            type="text" 
-            v-model="consoleCommand" 
-            ref="consoleInput" 
-            @keyup.enter = "onPressEnter"
-            @keyup.up    = "historyBackward"
-            @keyup.down  = "historyForward"
-            />
+        <textarea 
+            class="console-input__textinput"
+            v-model="consoleCommand"
+            ref="consoleInput"
+            @keyup.enter="onPressEnter"
+            @keyup.up="historyBackward"
+            @keyup.down="historyForward"
+            oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
+        ></textarea>
     </div>
 </template>

@@ -10,10 +10,14 @@ const CONFIG_COMMENT_CHARACTER = "#"
 export default async () => {
     let config = getInitialConfig()
 
+
     let localConfig = localStorage.getItem(config["config.persistence.keyname"])
     let _config = config
 
-    if(config["config.persistence.forcerefresh"] || localConfig == null || hasLocalInvalidated()) _config = {..._config, ...(await loadFromRemote(_config))}
+    if(localConfig == null 
+        || hasLocalInvalidated(_config)
+        || ( config["config.persistence.forcerefresh"]&& config["config.persistence.forcerefresh"].toLowerCase() == 'true')
+    ) _config = {..._config, ...(await loadFromRemote(_config))}
     else  _config = {..._config, ...loadFromLocal(_config)}
 
     if(Object.keys(devConfig).length > 0) {
@@ -26,7 +30,7 @@ export default async () => {
 }
 
 const loadFromLocal = config => {
-    return JSON.parse(localStorage.getItem(config.persistence.key_name))
+    return JSON.parse(localStorage.getItem(config["config.persistence.keyname"]))
 }
 
 const loadFromRemote = async config => {
@@ -43,6 +47,11 @@ const saveToLocal = (config, newConfig) => {
 }
 
 const interpretValue = value => {
+    if(typeof value === 'boolean'
+        || typeof value === 'number'
+        || typeof value !== 'string'
+    ) return value;
+
     if(value.toLowerCase().trim() == 'true') return true;        // Boolean Check (True)
     else if(value.toLowerCase().trim() == 'false') return false; // Boolean Check (False)
     else if(/^\d+$/.test(value)) return +value                   // Integer
@@ -78,3 +87,4 @@ const getInitialConfig = () => {
 const getCurrentTimestamp = () => Math.floor(new Date().getTime() / 1000)
 const getTimeout          = config => config["config.persistence.invalidate"]
 const hasLocalInvalidated = config => ((+localStorage.getItem(config["config.persistence.timestampkey"])) + getTimeout(config)) < getCurrentTimestamp()
+

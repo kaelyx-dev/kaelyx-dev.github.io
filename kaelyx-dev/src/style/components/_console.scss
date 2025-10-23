@@ -20,6 +20,7 @@
         flex-direction: row;
         flex-wrap: nowrap;
         gap: spacing.spacing("small");
+        width: 100%;
     }
     &-input {
         &__cwd{
@@ -29,6 +30,7 @@
             all: unset;
             background-color: transparent;
             color: white;
+            width: 100%;
         }
     }
 }

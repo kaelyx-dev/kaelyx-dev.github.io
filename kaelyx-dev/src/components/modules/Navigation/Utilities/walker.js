@@ -4,9 +4,9 @@ let config
 
 export const getDirectoryStructure = async _config => {
     config = _config
+
     let localConfig = localStorage.getItem(config.getValue("directory.persistence.keyname"))
     let _dir = {}
-
     if(config.getValue("directory.persistence.forcerefresh") || localConfig == null || hasLocalInvalidated()){
         _dir = await buildDirectory()
         saveToLocal(_dir)
@@ -22,7 +22,7 @@ const loadFromLocal = () => {
 }
 
 const saveToLocal = newDir => {
-    localStorage.setItem(config.getValue("directory.persitence.timestampkey"), getCurrentTimestamp())
+    localStorage.setItem(config.getValue("directory.persistence.timestampkey"), getCurrentTimestamp())
     localStorage.setItem(config.getValue("directory.persistence.keyname"), JSON.stringify(newDir))
 }
 
@@ -128,3 +128,5 @@ const hasContent = subTree => subTree && Object.entries(subTree).some(([_,v]) =>
 const getCurrentTimestamp = () => Math.floor(new Date().getTime() / 1000)
 const getTimeout          = () => config.getValue("directory.persistence.invalidate")
 const hasLocalInvalidated = () => ((+localStorage.getItem(config.getValue("directory.persistence.timestampkey"))) + getTimeout()) < getCurrentTimestamp()
+
+

@@ -78,6 +78,13 @@
         background-color: colours.colour("black");
         box-shadow: 4px 4px 0px 0px colours.colour("gray-3");
 
+        &.no-style {
+            border: none;
+            box-shadow: none;
+            padding: 0;
+            margin: 0;
+            background-color: transparent;
+        }
     }
 
     img{
