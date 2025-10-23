@@ -3,7 +3,7 @@
 
 #button-bar {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     padding: spacing.spacing('large') spacing.spacing('large');
 
     @include mq.mq($until: stablet){
@@ -22,9 +22,5 @@
         @include mq.mq($until: stablet){
             flex-direction: column;
         }
-    }
-
-    @include mq.mq($until: stablet){
-        flex-direction: column;
     }
 }

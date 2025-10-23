@@ -9,6 +9,7 @@ import Console from '@module/Content/components/shortcodes/Console.vue'
 import Project from '@module/Content/components/shortcodes/Project.vue'
 import ProjectTechStack from '@module/Content/components/shortcodes/ProjectTechStack.vue'
 import ClearCookieConsent from '@module/Content/components/shortcodes/ClearCookieConsent.vue'
+import ArticleWidget from '@module/Content/components/shortcodes/ArticleWidget.vue'
 
 const shortCodes = {
     "HELLOWORLD": HelloWorld,
@@ -18,7 +19,8 @@ const shortCodes = {
     "CONSOLE" : Console,
     "PROJECT" : Project,
     "PROJECTTECHSTACK" : ProjectTechStack,
-    "CLEARCOOKIECONSENT" : ClearCookieConsent
+    "CLEARCOOKIECONSENT" : ClearCookieConsent,
+    "ARTICLEWIDGET" : ArticleWidget
 }
 
 const regexPattern = () => {

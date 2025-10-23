@@ -1,7 +1,51 @@
 @use "../variables/spacing";
+        @use "../mq";
 
 .box {
     border: 2px solid white;
     padding: spacing.spacing('medium');
     word-wrap: break-word;
+
+    &--mobile-accordion {
+
+        &-visible {
+            display: none;
+            @include mq.mq($until: stablet){
+                display: block;
+            }
+        }
+        &-open {
+            @include mq.mq($until: stablet){
+                max-height: none;
+                .title {
+                    width: 100%;
+                    cursor: pointer;
+                    &::before {
+                        content: "⯆";
+                    }
+                }
+            }
+        }
+        &-closed {
+            @include mq.mq($until: stablet){
+                max-height: 3.5em;
+                overflow: hidden;
+                position: relative;
+                
+                & .box--mobile-accordion-closed-hidden {
+                    @include mq.mq($until: stablet){
+                        display: none;
+                    }
+                }
+
+                .title {
+                    width: 100%;
+                    cursor: pointer;
+                    &::before {
+                        content: "⯈";
+                    }
+                }
+            }
+        }
+    }
 }

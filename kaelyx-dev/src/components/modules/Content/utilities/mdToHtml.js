@@ -4,8 +4,17 @@ import { useConfigStore } from "@store/ConfigStore"
 import { useDirectoryStore } from "@/stores/DirectoryStore"
 
 export default md => {
+    let firsth1 = false;
     const renderer = new marked.Renderer();
-
+    renderer.heading = heading => {
+        const { text, depth, raw, slug } = heading;
+        if(depth === 1 && !firsth1) {
+            firsth1 = true;
+            return `<h${depth} class="content-title">${text}</h${depth}>{{articlewidget}}`;
+        } else {
+            return `<h${depth}>${text}</h${depth}>`;
+        }
+    };
     renderer.code  = code => highlightCode(code)
     renderer.image = image => makeImageSrcAbsolute(image)
     renderer.link  = link => handleLinksIfInShortcodes(link)

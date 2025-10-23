@@ -1,6 +1,6 @@
 <script setup>
-import Share from './Share.vue';
-import ReadTime from './ReadTime.vue';
+import Share from '../Share.vue';
+import ReadTime from '../ReadTime.vue';
 import { useDirectoryStore } from '@/stores/DirectoryStore';
 
 const directory = useDirectoryStore()

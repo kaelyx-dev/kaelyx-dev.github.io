@@ -4,6 +4,7 @@
 
 .main-content {
     overflow: auto;
+    height: 100%;
     min-height: 0;
 
     scrollbar-color: #ffffff #000000;
@@ -16,7 +17,6 @@
     h1 {
         font-size: 1.5em;
         text-decoration: underline;
-        padding-bottom: spacing.spacing('small');
     }
 
     h2 {
