@@ -21,6 +21,7 @@ export const useDirectoryStore = defineStore('directory', () => {
         let directory = await getDirectoryStructure(config);
         pages.value = directory
         if(permalink) {
+            removePermalinkFromURI()
             setActivePage(permalink)
         } else if(window.location.hash.length == 0){
             setActivePage(await config.getValue("content.home"))
@@ -91,6 +92,10 @@ export const useDirectoryStore = defineStore('directory', () => {
     }
 
     const isActiveContentUrlSet = computed(() => activeContentUrl.value.length > 0)
+
+    const removePermalinkFromURI = () => {
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
 
     return { 
         init, 
