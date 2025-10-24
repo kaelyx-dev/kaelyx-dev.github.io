@@ -16,6 +16,10 @@
         display: flex;
         flex-direction: row;
         gap: spacing.spacing("small");
+
+        @include mq.mq($until: mobile){
+            flex-direction: column;
+        }
     }
 
     @include mq.mq($until: stablet){
