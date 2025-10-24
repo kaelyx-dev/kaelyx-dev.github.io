@@ -1,8 +1,19 @@
 @use "../variables/spacing";
+@use "../mq";
 
 footer {
     display: flex;
     gap: spacing.spacing('small');
+    overflow: hidden;
+
+
+    @include mq.mq($until: phablet){
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        & .colours { margin: auto; }
+    }
+
     .colours {
         margin-left: auto;
         display: flex;
