@@ -30,17 +30,43 @@ const shortCodes = {
     "CONSOLE" : Console,
 }
 
+// {{\s*(?<closer>\:)?(?<shortcode>\w+(?:.(?<subcode>\w+)))(?<args>(?:\s+\w+=(?:"[^"]*"|\S+))*)\s*(?<opener>\:)?}}
+//{{helloWorld.test:}}
+//{{:helloWorld.test}}
+
+
+// function parseNestedShortcodes(text) {
+//   const stack = []
+//   const tokens = tokenize(text) // Split into opening tags, closing tags, and content
+//   for (const token of tokens) {
+//     if (token.type === 'opening') {
+//       stack.push(token)
+//     } else if (token.type === 'closing') {
+//       const opening = stack.pop()
+//       // Match opening with closing, process content between
+//     }
+//   }
+// }
+
+
+
+
+
+
+
+
+
+
+
 const regexPattern = () => {
     const config = useConfigStore()
 
     const s = config.getValue("content.shortcodes.syntax.start")
     const e = config.getValue("content.shortcodes.syntax.end")
-    return new RegExp(`${regexEscape(s)}\\s*(?<shortcode>\\w+)(?<args>(?:\\s+\\w+=(?:"[^"]*"|\\S+))*)\\s*${regexEscape(e)}`,"g")
+    return new RegExp(`${_rE(s)}\\s*(?<shortcode>\\w+)(?<args>(?:\\s+\\w+=(?:"[^"]*"|\\S+))*)\\s*${_rE(e)}`,"g")
 }
 
-const regexEscape = str => {
-    return str.split("").map(e => `\\${e}`).join("")
-}
+const _rE = str =>  str.split("").map(e => `\\${e}`).join("")
 
 export const generateShortcodeMap = (text, removeUnknownShortcodes) => {
     const config = useConfigStore()
