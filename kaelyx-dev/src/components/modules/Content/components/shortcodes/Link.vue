@@ -10,19 +10,15 @@ const {link, name} = defineProps({
 })
 
 
-const posthog = inject('posthog')
-const externalLinkClicked = inject('posthogExternalLink')
-const pageViewEvent = inject('posthogPageview')
 
 const localLink = computed(() => link.startsWith("/"))
 
 const onClick = () => {
-    pageViewEvent(posthog, link)
     directory.setActivePage(link)
 }
 
 const onClickExternal = () => {
-    externalLinkClicked(posthog, link)
+    
 }
 
 </script>

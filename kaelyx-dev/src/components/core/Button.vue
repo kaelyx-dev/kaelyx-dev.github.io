@@ -13,11 +13,7 @@ onMounted(() => {
     colour.value.text       = _c.text
 })
 
-const posthog = inject('posthog')
-const externalLinkClicked = inject('posthogExternalLink')
-
 const onClick = () => {
-    externalLinkClicked(posthog, props.button.link)
 }
 
 </script>

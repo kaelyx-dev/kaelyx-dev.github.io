@@ -8,16 +8,13 @@ const directory = useDirectoryStore()
 const config = useConfigStore()
 
 
-const posthog = inject('posthog')
-const pageViewEvent = inject('posthogPageview')
+
 
 const { file } = defineProps({
     file: Object
 })
 
 const setActivePage = () => {
-
-    pageViewEvent(posthog, file.link, file.metaName)
     directory.setActivePage(file.link)
 }
 
