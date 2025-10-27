@@ -1,6 +1,6 @@
 <script setup>
 import { useDirectoryStore } from '@store/DirectoryStore';
-import { calculate } from '../utilities/timeToRead';
+import { calculate } from '../../utilities/timeToRead';
 import { computed, watch} from 'vue';
 
 let store = useDirectoryStore()

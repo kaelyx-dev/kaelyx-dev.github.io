@@ -16,9 +16,7 @@ const colours = {
     "gray-5":" #ccc",
 }
 
-export default colour => {
-    return colours[colour] ? parseColour(colour) : parseColour('red')
-}
+export default colour => colours[colour] ? parseColour(colour) : parseColour('red')
 
 const parseColour = colour => ({name: colour, value: colours[colour], text: getContrastFontColour(colours[colour])})
 

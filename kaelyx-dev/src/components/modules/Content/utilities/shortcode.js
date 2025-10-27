@@ -8,19 +8,26 @@ import Image from '@module/Content/components/shortcodes/Image.vue'
 import Console from '@module/Content/components/shortcodes/Console.vue'
 import Project from '@module/Content/components/shortcodes/Project.vue'
 import ProjectTechStack from '@module/Content/components/shortcodes/ProjectTechStack.vue'
-import ClearCookieConsent from '@module/Content/components/shortcodes/ClearCookieConsent.vue'
 import ArticleWidget from '@module/Content/components/shortcodes/ArticleWidget.vue'
+import Share from '@module/Content/components/shortcodes/Share.vue'
+import ReadTime from '@module/Content/components/shortcodes/ReadTime.vue'
 
 const shortCodes = {
+    // Content
     "HELLOWORLD": HelloWorld,
     "ICON": Icon,
     "LINK": Link,
     "IMAGE": Image,
-    "CONSOLE" : Console,
     "PROJECT" : Project,
     "PROJECTTECHSTACK" : ProjectTechStack,
-    "CLEARCOOKIECONSENT" : ClearCookieConsent,
-    "ARTICLEWIDGET" : ArticleWidget
+    "ARTICLEWIDGET" : ArticleWidget,
+    "SHARE": Share,
+    "READTIME": ReadTime,
+    
+    // Layout
+    
+    // Tools
+    "CONSOLE" : Console,
 }
 
 const regexPattern = () => {
@@ -64,23 +71,14 @@ const findAllShortCodes = (text) => {
 
         let _component = getComponent(name)
 
-
-
-
         if (e.groups['args']){
             const argRegex = /\b(\w+)=("([^"]*)"|(\S+))/g;
             let argMatch;
             while ((argMatch = argRegex.exec(e.groups['args'])) !== null) {
                 _props[argMatch[1]] = argMatch[3] || argMatch[4];
             }
-        }else _props = undefined
+        } else _props = undefined
 
-        // if(e.groups['args']) {
-        //     e.groups['args'].split(" ").map((e) => {
-        //         let _a = e.split("=")
-        //         return _props[_a[0]] = _a[1]
-        //     })
-        // } else _props = undefined
         return {
             id          : _id,
             name        : name,
@@ -94,15 +92,12 @@ const findAllShortCodes = (text) => {
 
 const createHyperscriptObject = (component, props) => (component) ? props ? h(component, props) : h(component) : undefined
 const generatePlaceholderNode = id => {
-    const config = useConfigStore()
-    const placeholderTagName = config.getValue("content.shortcodes.placeholder")
+    const placeholderTagName = useConfigStore().getValue("content.shortcodes.placeholder")
     return `<${placeholderTagName} data-id=\"${id}\"></${placeholderTagName}>`
 
 }
 
-export const findShortcode = (id, list) => {
-    return list.filter(e => e.id == id)[0]
-}
+export const findShortcode = (id, list) => list.find(e => e.id == id)
 
 export const getComponent = componentName => {
     return shortCodes[Object.keys(shortCodes).filter(e => e.toUpperCase() == componentName.toUpperCase())[0]]

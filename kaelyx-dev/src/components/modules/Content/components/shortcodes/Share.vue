@@ -5,7 +5,7 @@ import { useDirectoryStore } from '@store/DirectoryStore';
 import { useToastStore } from '@store/toastStore'
 import { useConfigStore } from '@/stores/ConfigStore';
 
-import { encodePermaLink } from '../utilities/permalink';
+import { encodePermaLink } from '../../utilities/permalink';
 
 import Modal from '@core/ModalButton.vue';
 
