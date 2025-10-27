@@ -2,7 +2,7 @@
 </script>
 <template>
     <div class="loader__container">
-      <p>Initiating Site</p>
+      <p>Loading</p>
       <div class="loader"></div>
     </div>
 </template>

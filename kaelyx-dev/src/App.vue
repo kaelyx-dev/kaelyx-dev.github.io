@@ -12,6 +12,7 @@ import ContentPanel from './components/core/ContentPanel.vue';
 import { getPermalinkQueryParam } from '@module/Content/utilities/permalink';
 import Toasts from '@module/Content/components/Toasts.vue';
 import GlobalProvider from './components/modules/GlobalProvider/GlobalProvider.vue';
+import Cookie from './components/core/Cookie.vue';
 import ScriptProvider from './components/core/ScriptProvider.vue';
 
 const config = useConfigStore()
@@ -29,6 +30,7 @@ config.init().then(() => {
   <template v-if="!loading">
       <GlobalProvider>
         <ScriptProvider/>
+        <Cookie/>
         <Header/>
         <main class="content">
           <NavigationPanel/>
