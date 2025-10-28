@@ -50,6 +50,103 @@ const shortCodes = {
 //     }
 //   }
 // }
+const text = `
+<!-- Title: Readme.md -->
+<!-- Date: 24/04/2025 -->
+<!-- Keywords: a,b,c,d,e-->
+<!-- ShowPermalink: true-->
+
+# This is an example file that exists in kaelyx.content
+
+I have some content here
+
+## TODO:
+* Add an image to this file
+* see how it loads
+* do I need to use full paths or can i figure out relative paths
+
+{{helloworld}}
+{{layout.flex}}
+x
+
+y
+{{/layout.flex}}
+
+{{layout.flex style="horizontal" gap="10px"}}
+  {{group.div}}
+    test1
+  {{/group.div}}
+  {{group.div}}
+    test2
+  {{/group.div}}
+{{/layout.flex}}
+
+<h1></h1>
+`;
+
+
+
+function replaceLayoutBlocks(input) {
+  const tokenRegex = /\{\{\s*(\/?)([\w.]+)([^}]*)\}\}/g;
+  const stack = [];
+  let output = '';
+  let lastIndex = 0;
+
+  let match;
+  while ((match = tokenRegex.exec(input)) !== null) {
+    const [fullToken, slash, tag, args] = match;
+    const index = match.index;
+
+    if (!slash) {
+        console.log(args)
+      stack.push({
+        tag,
+        startIndex: index,
+        args: args.trim(),
+        contentStart: index + fullToken.length,
+      });
+    } else {
+      for (let i = stack.length - 1; i >= 0; i--) {
+        if (stack[i].tag === tag) {
+          const opener = stack.splice(i, 1)[0];
+
+          if (stack.length === 0) {
+            output += input.slice(lastIndex, opener.startIndex);
+          }
+
+          const innerContent = input.slice(opener.contentStart, index);
+
+          const className = tag.split('.').join(' ');
+          const wrapped = `<div class="${className}">${innerContent}</div>`;
+
+          if (stack.length === 0) {
+            output += wrapped;
+            lastIndex = index + fullToken.length;
+          } else {
+            input =
+              input.slice(0, opener.startIndex) +
+              wrapped +
+              input.slice(index + fullToken.length);
+
+            tokenRegex.lastIndex = opener.startIndex + wrapped.length;
+          }
+
+          break;
+        }
+      }
+    }
+  }
+
+  // Append remaining text
+  if (lastIndex < input.length) {
+    output += input.slice(lastIndex);
+  }
+
+  return output;
+}
+
+console.log(replaceLayoutBlocks(text));
+
 
 const regexPattern = () => {
     const config = useConfigStore()
