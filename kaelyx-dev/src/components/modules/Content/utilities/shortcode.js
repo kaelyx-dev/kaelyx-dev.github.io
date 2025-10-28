@@ -30,11 +30,14 @@ const shortCodes = {
     "CONSOLE" : Console,
 }
 
-// {{\s*(?<closer>\:)?(?<shortcode>\w+(?:.(?<subcode>\w+)))(?<args>(?:\s+\w+=(?:"[^"]*"|\S+))*)\s*(?<opener>\:)?}}
+//{{\s*(?<closer>\:)?(?<shortcode>\w+(?:\.(?<subcode>\w+)))(?<args>(?:\s+\w+=(?:"[^"]*"|\S+))*)\s*(?<opener>\:)?}}
 //{{helloWorld.test:}}
 //{{:helloWorld.test}}
 
-
+//{{(?<layoutParent>\w+)(?:\.(?<layoutChild>\w+))}}(?<content>[\S\s]*){{\\\1\.?\2}}
+//(?<opener>{{(?<layoutParent>\w+)(?:\.(?<layoutChild>\w+))}})(?:[\S\s]*)(?<closer>{{\/\2\.?\3}})
+// (?<opener>{{\s*(?<layoutParent>\w+)(?:\.(?<layoutChild>\w+))\s*}})(?:[\S\s]*)(?<closer>{{\s*\/\2\.?\3\s*}})
+// (?<opener>{{\s*(?<layoutParent>\w+)(?:\.(?<layoutChild>\w+))\s*(?<args>(?:\s*\w+=\w+)*)?\s*}})(?:[\S\s]*)(?<closer>{{\s*\/\2\.?\3\s*}})
 // function parseNestedShortcodes(text) {
 //   const stack = []
 //   const tokens = tokenize(text) // Split into opening tags, closing tags, and content
@@ -47,16 +50,6 @@ const shortCodes = {
 //     }
 //   }
 // }
-
-
-
-
-
-
-
-
-
-
 
 const regexPattern = () => {
     const config = useConfigStore()
