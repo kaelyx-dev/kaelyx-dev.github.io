@@ -1,0 +1,62 @@
+name: Deploy to GitHub Pages
+
+on:
+  # Merging a PR into main pushes to main, which builds and deploys
+  push:
+    branches: [main]
+  # PRs into main are built (SSG) to check they work, but never deployed
+  pull_request:
+    branches: [main]
+  # "Run workflow" button in the Actions tab
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.ref) || 'pages' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: kaelyx-dev
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: kaelyx-dev/package.json
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: kaelyx-dev/.nvmrc
+          cache: pnpm
+          cache-dependency-path: kaelyx-dev/pnpm-lock.yaml
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Generate static site
+        run: pnpm generate
+
+      - uses: actions/upload-pages-artifact@v4
+        if: github.event_name != 'pull_request'
+        with:
+          path: kaelyx-dev/.output/public
+
+  deploy:
+    needs: build
+    # Only ever publish from main, even if the button is pressed on another branch
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

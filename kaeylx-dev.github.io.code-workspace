@@ -1,0 +1,13 @@
+{
+    "folders": [
+        {
+            "name": "Site",
+            "path": "./kaelyx-dev",
+        },
+        {
+            "name": "Content",
+            "path": "./kaelyx-dev/content"
+        }
+    ],
+    "settings": {}
+}
