@@ -1,6 +1,7 @@
 allowBuilds:
   esbuild: true
 minimumReleaseAgeExclude:
+  - '@kaelyx/ts-kit'
   - '@rollup/plugin-alias@6.0.1'
   - '@rollup/plugin-terser@1.0.2'
   - rolldown@1.2.15
