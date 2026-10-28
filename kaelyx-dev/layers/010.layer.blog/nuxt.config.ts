@@ -3,5 +3,6 @@ export default defineNuxtConfig({
         prerender: {
             routes: ['/feed.xml']
         }
-    }
+    },
+    extends: ['~~/layers/005.layer.content']
 })
