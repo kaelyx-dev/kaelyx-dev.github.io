@@ -1,0 +1,20 @@
+$scheme: dark;
+
+$tokens: (
+  colour: (
+    background: #1e1a16,
+    foreground: #e8dfd0,
+
+    surface: (raised: #2a251f),
+
+    primary: #8fb0d6,
+    secondary: #c2b6a6,
+    tertiary: #7fbfae,
+    accent: #e0b067,
+
+    info: #8ab8d4,
+    success: #9cc48a,
+    warning: #e0a46a,
+    danger: #e08a7f,
+  ),
+);

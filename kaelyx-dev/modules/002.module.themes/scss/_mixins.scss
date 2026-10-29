@@ -1,0 +1,336 @@
+@use 'sass:color';
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:string';
+@use 'tokens';
+@use 'functions';
+@use 'contrast';
+
+$attribute: 'data-theme' !default;
+
+$tone-attribute: 'data-tone' !default;
+
+$-default-colours: null;
+
+@mixin -emit($category, $values, $path: null) {
+  @each $key, $value in $values {
+    $name: '#{$key}';
+
+    @if $path and $key == base {
+      $name: $path;
+    } @else if $path {
+      $name: '#{$path}#{tokens.$separator}#{$key}';
+    }
+
+    @if meta.type-of($value) == 'map' {
+      @include -emit($category, $value, $name);
+    } @else {
+      #{functions.prop($category, $name)}: #{$value};
+    }
+  }
+}
+
+// Page background used to work out readable role text.
+@function -background($colours, $scheme) {
+  $bg: map.get($colours, background);
+
+  @if meta.type-of($bg) == 'color' {
+    @return $bg;
+  }
+
+  @if $scheme == dark {
+    @return #121216;
+  }
+
+  @return #ffffff;
+}
+
+// Expand each role to its full set of parts, filling in what's missing.
+@function -expand-roles($theme, $colours, $scheme) {
+  $background: -background($colours, $scheme);
+
+  @each $role in tokens.$roles {
+    @if map.has-key($colours, $role) {
+      $value: map.get($colours, $role);
+
+      // Shorthand: `primary: #2251d1` means `primary: (base: #2251d1)`.
+      @if meta.type-of($value) != 'map' {
+        $value: (base: $value);
+      }
+
+      @if not map.has-key($value, base) {
+        @error 'Theme `#{$theme}`: role `#{$role}` needs a `base` colour.';
+      }
+
+      $base: map.get($value, base);
+      $ref: functions.colour($role);
+      $is-colour: meta.type-of($base) == 'color';
+
+      // contrast: best of light/dark on the fill, or check the one supplied.
+      @if not map.has-key($value, contrast) {
+        @if $is-colour {
+          $value: map.set($value, contrast, contrast.best($base));
+        } @else {
+          @error 'Theme `#{$theme}`: role `#{$role}` uses a non-colour base, so `contrast` must be given.';
+        }
+      } @else if $is-colour and meta.type-of(map.get($value, contrast)) == 'color' {
+        $r: contrast.ratio($base, map.get($value, contrast));
+
+        @if $r < tokens.$min-contrast {
+          @warn 'Theme `#{$theme}`: `#{$role}` / `#{$role}-contrast` contrast is #{contrast.format($r)}:1 (minimum #{tokens.$min-contrast}:1).';
+        }
+      }
+
+      // text: the role colour, nudged until it reads on the page background.
+      @if not map.has-key($value, text) {
+        @if $is-colour {
+          $value: map.set($value, text, contrast.readable(
+            $base, $background, contrast.best($background), tokens.$min-contrast
+          ));
+        } @else {
+          $value: map.set($value, text, $ref);
+        }
+      }
+
+      // hover / subtle / border: mixed in the browser from the live base.
+      @if not map.has-key($value, hover) {
+        $value: map.set($value, hover, string.unquote(
+          'color-mix(in oklab, #{$ref}, #{functions.colour('#{$role}-contrast')} 15%)'
+        ));
+      }
+
+      @if not map.has-key($value, subtle) {
+        $value: map.set($value, subtle, string.unquote(
+          'color-mix(in oklab, #{$ref} 14%, #{functions.colour(background)})'
+        ));
+      }
+
+      @if not map.has-key($value, border) {
+        $value: map.set($value, border, string.unquote(
+          'color-mix(in oklab, #{$ref} 45%, #{functions.colour(background)})'
+        ));
+      }
+
+      $colours: map.set($colours, $role, $value);
+    }
+  }
+
+  @return $colours;
+}
+
+// The mix for one neutral key, e.g. 15% -> color-mix(... foreground 15%, background).
+@function -neutral-mix($amount) {
+  @if $amount == 0% {
+    @return functions.colour(background);
+  }
+
+  @if $amount == 100% {
+    @return functions.colour(foreground);
+  }
+
+  @return string.unquote(
+    'color-mix(in oklab, #{functions.colour(foreground)} #{$amount}, #{functions.colour(background)})'
+  );
+}
+
+// Fill in neutrals. Only the default theme gets the derived values: they sit
+// on :root and use var(), so other themes inherit them and they recalculate
+// from whatever background/foreground that theme sets.
+@function -expand-neutrals($theme, $colours, $default) {
+  @each $group, $keys in tokens.$neutrals {
+    $given: map.get($colours, $group);
+
+    // Shorthand: `border: #ddd` means `border: (base: #ddd)`.
+    @if $given != null and meta.type-of($given) != 'map' {
+      $given: (base: $given);
+    }
+
+    @if $default {
+      $derived: ();
+
+      @each $key, $amount in $keys {
+        $derived: map.set($derived, $key, -neutral-mix($amount));
+      }
+
+      $given: map.merge($derived, $given or ());
+    }
+
+    @if $given != null {
+      $colours: map.set($colours, $group, $given);
+    }
+  }
+
+  @return $colours;
+}
+
+// Warn when hand-picked text colours don't read on a hand-picked background.
+@mixin -check-text($theme, $colours) {
+  $bg: map.get($colours, background);
+  $text: map.get($colours, text);
+
+  @if meta.type-of($bg) == 'color' and meta.type-of($text) == 'map' {
+    @each $key in (base, muted) {
+      $value: map.get($text, $key);
+
+      @if meta.type-of($value) == 'color' {
+        $r: contrast.ratio($value, $bg);
+
+        @if $r < tokens.$min-contrast {
+          @warn 'Theme `#{$theme}`: text.#{$key} on background is #{contrast.format($r)}:1 (minimum #{tokens.$min-contrast}:1).';
+        }
+      }
+    }
+  }
+}
+
+// A theme that changes `background` but not a role still inherits that role's `text` from the default
+// theme, which was tuned for the default background. Re-tune any that no longer read on the new one.
+@function -retune-inherited-roles($theme, $own, $colours) {
+  $bg: map.get($own, background);
+
+  @if $-default-colours == null or meta.type-of($bg) != 'color' {
+    @return $colours;
+  }
+
+  @each $role in tokens.$roles {
+    $inherited: map.get($-default-colours, $role);
+
+    @if not map.has-key($own, $role) and $inherited != null {
+      $text: map.get($inherited, text);
+      $base: map.get($inherited, base);
+
+      @if meta.type-of($text) == 'color' and contrast.ratio($text, $bg) < tokens.$min-contrast {
+        @if meta.type-of($base) == 'color' {
+          // emits only --colour-<role>-text; the other parts still come from the default theme
+          $colours: map.set($colours, $role, (
+            text: contrast.readable($base, $bg, contrast.best($bg), tokens.$min-contrast),
+          ));
+        } @else {
+          @warn 'Theme `#{$theme}`: inherited `#{$role}-text` is #{contrast.format(contrast.ratio($text, $bg))}:1 on this background; set `#{$role}` in this theme.';
+        }
+      }
+    }
+  }
+
+  @return $colours;
+}
+
+// The text greys are mixed in the browser, but when both ends of the mix are known colours the build
+// can work them out too and warn before anyone has to spot it on the page.
+@mixin -check-derived-text($theme, $own) {
+  $defaults: $-default-colours or ();
+  $bg: map.get($own, background) or map.get($defaults, background);
+  $fg: map.get($own, foreground) or map.get($defaults, foreground);
+  $changes-mix: map.has-key($own, background) or map.has-key($own, foreground);
+
+  @if $changes-mix and meta.type-of($bg) == 'color' and meta.type-of($fg) == 'color' {
+    $given: map.get($own, text);
+
+    @each $key in (base, muted) {
+      $hand-picked: (meta.type-of($given) == 'map' and map.has-key($given, $key))
+        or ($key == base and meta.type-of($given) == 'color');
+
+      @if not $hand-picked {
+        $amount: map.get(tokens.$neutrals, text, $key);
+        $r: contrast.ratio(color.mix($fg, $bg, $amount, $method: oklab), $bg);
+
+        @if $r < tokens.$min-contrast {
+          @warn 'Theme `#{$theme}`: text.#{$key} (#{$amount} foreground into background) is #{contrast.format($r)}:1 (minimum #{tokens.$min-contrast}:1).';
+        }
+      }
+    }
+  }
+}
+
+// Define a theme.
+//
+//   @include theme.define(dark, (
+//     colour: (
+//       background: #111,
+//       foreground: #eee,                                 // neutrals mix from these two
+//       surface: (raised: #1f1f25),                       // hand-pick any neutral
+//       primary: #7b9cff,                                 // shorthand
+//       accent: (base: #fbbf24, contrast: #000),          // explicit parts
+//     ),
+//   ), $scheme: dark);
+//
+// $default: true  -> also applies to plain :root (exactly one theme should do this).
+// $scheme         -> sets `color-scheme` so native controls/scrollbars match.
+//
+// A non-default theme only needs the tokens it changes; anything it leaves
+// out falls back to the default theme through the cascade on :root.
+@mixin define($name, $tokens, $default: false, $scheme: null) {
+  $selector: ':root[#{$attribute}="#{$name}"]';
+
+  @if $default {
+    $selector: ':root, #{$selector}';
+  }
+
+  #{$selector} {
+    @if $scheme {
+      color-scheme: $scheme;
+    }
+
+    @each $category, $values in $tokens {
+      @if meta.type-of($values) != 'map' {
+        @error 'Theme `#{$name}`: category `#{$category}` must be a map.';
+      }
+
+      @if $category == colour {
+        @if $default {
+          @each $required in (background, foreground) {
+            @if not map.has-key($values, $required) {
+              @error 'Default theme `#{$name}` must set colour `#{$required}`; the neutrals are mixed from it.';
+            }
+          }
+        }
+
+        $own: $values;
+        $values: -expand-neutrals($name, $values, $default);
+        $values: -expand-roles($name, $values, $scheme);
+
+        @if $default {
+          $-default-colours: $values !global;
+        } @else {
+          $values: -retune-inherited-roles($name, $own, $values);
+        }
+
+        @include -check-text($name, $values);
+        @include -check-derived-text($name, $own);
+      }
+
+      @include -emit($category, $values);
+    }
+
+    @content;
+  }
+}
+
+// Point the --tone-* variables at a role. Children inherit it, so a whole
+// section can switch tone and every tone-aware component inside follows.
+@mixin use-tone($role) {
+  --tone: #{functions.role($role)};
+
+  @each $part in tokens.$role-parts {
+    --tone-#{$part}: #{functions.role($role, $part)};
+  }
+}
+
+// `[data-tone="<role>"]` selectors. The themes layer emits these for the
+// built-in roles; a layer that adds its own role calls this for it.
+@mixin tone-selectors($roles: tokens.$roles) {
+  @each $role in $roles {
+    [#{$tone-attribute}='#{$role}'] {
+      @include use-tone($role);
+    }
+  }
+}
+
+// Style something only while a given theme is active.
+//   .logo { @include theme.when(dark) { filter: invert(1); } }
+@mixin when($name) {
+  :root[#{$attribute}="#{$name}"] & {
+    @content;
+  }
+}

@@ -1,0 +1,13 @@
+@use '@themes/api' as theme;
+
+body {
+  margin: 0;
+  background: theme.colour(background);
+  color: theme.colour(text);
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+a {
+  color: theme.tone(text);
+}

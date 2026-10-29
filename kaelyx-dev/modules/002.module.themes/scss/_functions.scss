@@ -1,0 +1,54 @@
+@use 'sass:list';
+@use 'sass:string';
+@use 'tokens';
+
+@function prop($category, $name) {
+  @if not list.index(tokens.$categories, $category) {
+    @error 'Unknown theme category `#{$category}`. Known: #{tokens.$categories}.';
+  }
+
+  $parts: '#{$category}#{tokens.$separator}#{$name}';
+
+  @if tokens.$prefix {
+    $parts: '#{tokens.$prefix}#{tokens.$separator}#{$parts}';
+  }
+
+  @return string.unquote('--#{$parts}');
+}
+
+@function token($category, $name, $fallback: null) {
+  @if $fallback {
+    @return var(prop($category, $name), $fallback);
+  }
+
+  @return var(prop($category, $name));
+}
+
+// Shorthand for the category you'll use most.
+@function colour($name, $fallback: null) {
+  @return token(colour, $name, $fallback);
+}
+
+@function role($role, $part: null) {
+  @if $part and not list.index(tokens.$role-parts, $part) {
+    @error 'Unknown role part `#{$part}`. Known: #{tokens.$role-parts}.';
+  }
+
+  @if $part {
+    @return colour('#{$role}#{tokens.$separator}#{$part}');
+  }
+
+  @return colour($role);
+}
+
+@function tone($part: null) {
+  @if $part and not list.index(tokens.$role-parts, $part) {
+    @error 'Unknown tone part `#{$part}`. Known: #{tokens.$role-parts}.';
+  }
+
+  @if $part {
+    @return var(string.unquote('--tone-#{$part}'));
+  }
+
+  @return var(--tone);
+}

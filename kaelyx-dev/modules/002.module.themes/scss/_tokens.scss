@@ -1,0 +1,17 @@
+$categories: (colour,) !default;
+
+$separator: '-' !default;
+
+$prefix: null !default;
+
+$roles: (primary, secondary, tertiary, accent, info, success, warning, danger) !default;
+
+$role-parts: (contrast, text, hover, subtle, border) !default;
+
+$min-contrast: 4.5 !default;
+
+$neutrals: (
+  surface: (base: 4%, raised: 0%, sunken: 7%),
+  text: (base: 100%, muted: 68%, subtle: 50%),
+  border: (base: 15%, subtle: 8%, strong: 50%),
+) !default;

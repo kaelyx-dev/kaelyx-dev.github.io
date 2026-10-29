@@ -9,7 +9,8 @@
     "generate": "nuxt generate",
     "generate:preview": "node scripts/preview-static.mjs",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "test": "vitest run"
   },
   "dependencies": {
     "@kaelyx/ts-kit": "^0.10.0",
@@ -25,6 +26,8 @@
     "@nuxt/kit": "4.6.2",
     "@types/node": "^26.6.5",
     "feed": "^6.0.0",
-    "pathe": "^2.0.3"
+    "pathe": "^2.0.3",
+    "sass-embedded": "^1.107.0",
+    "vitest": "^5.0.5"
   }
 }

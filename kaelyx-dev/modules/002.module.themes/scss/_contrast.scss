@@ -1,0 +1,51 @@
+@use 'sass:color';
+@use 'sass:math';
+
+@function -linear($channel) {
+  $c: math.div($channel, 255);
+
+  @if $c <= 0.04045 {
+    @return math.div($c, 12.92);
+  }
+
+  @return math.pow(math.div($c + 0.055, 1.055), 2.4);
+}
+
+@function luminance($colour) {
+  $r: -linear(color.channel($colour, 'red', $space: rgb));
+  $g: -linear(color.channel($colour, 'green', $space: rgb));
+  $b: -linear(color.channel($colour, 'blue', $space: rgb));
+
+  @return 0.2126 * $r + 0.7152 * $g + 0.0722 * $b;
+}
+
+@function ratio($a, $b) {
+  $la: luminance($a) + 0.05;
+  $lb: luminance($b) + 0.05;
+
+  @return math.div(math.max($la, $lb), math.min($la, $lb));
+}
+
+@function best($background, $light: #ffffff, $dark: #0b0b0f) {
+  @if ratio($background, $light) >= ratio($background, $dark) {
+    @return $light;
+  }
+
+  @return $dark;
+}
+
+@function readable($colour, $background, $towards, $min) {
+  @for $i from 0 through 20 {
+    $candidate: color.mix($towards, $colour, $i * 5%);
+
+    @if ratio($candidate, $background) >= $min {
+      @return $candidate;
+    }
+  }
+
+  @return $towards;
+}
+
+@function format($n) {
+  @return math.div(math.round($n * 100), 100);
+}

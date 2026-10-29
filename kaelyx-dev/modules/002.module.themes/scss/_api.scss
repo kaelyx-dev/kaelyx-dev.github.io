@@ -1,0 +1,8 @@
+// Public entry point for every layer and component:
+//   @use '@themes/api' as theme;
+//
+// Configure once (e.g. in the app's own SCSS) if needed:
+//   @use '@themes/api' as theme with ($prefix: 'app');
+@forward 'tokens';
+@forward 'functions';
+@forward 'mixins';
