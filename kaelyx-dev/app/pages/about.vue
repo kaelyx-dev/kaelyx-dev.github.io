@@ -7,8 +7,15 @@
 <script lang="ts" setup>
 import { definePage } from 'vue-router/experimental';
 
-definePage({
+definePageMeta({
   name: 'About',
+  NavigationMeta: {
+    order: 1,
+    visible: {
+      header: true,
+      footer: true
+    }
+  }
 })
 
 </script>

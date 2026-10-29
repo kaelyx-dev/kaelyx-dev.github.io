@@ -6,10 +6,16 @@ export interface NavigationMeta {
     order?: number
     label?: string
     type?: ActionType
+    icon?: string
     visible: {
         header?: boolean
         footer?: boolean
     }    
+}
+
+export interface NavigationNode extends Omit<NavigationMeta, 'visible'> {
+    name: string
+    path: string
 }
 
 declare module 'nuxt/app' {

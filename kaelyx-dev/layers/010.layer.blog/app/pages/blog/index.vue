@@ -8,6 +8,18 @@
 </template>
 
 <script lang="ts" setup>
+
+definePageMeta({
+  name: 'Blog',
+  NavigationMeta: {
+    order: 3,
+    visible: {
+      header: true,
+      footer: true
+    }
+  }
+})
+
 const { getCollection } = useContent()
 
 // Only the fields the listing needs, so full bodies are not shipped in the payload
