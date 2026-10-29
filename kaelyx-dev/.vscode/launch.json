@@ -2,7 +2,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-      // Runs the same script as `pnpm dev`; the debugger follows it into the Nuxt and Nitro child processes
       "type": "node",
       "request": "launch",
       "name": "server: nuxt",
