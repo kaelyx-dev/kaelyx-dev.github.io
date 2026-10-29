@@ -1,0 +1,39 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // Runs the same script as `pnpm dev`; the debugger follows it into the Nuxt and Nitro child processes
+      "type": "node",
+      "request": "launch",
+      "name": "server: nuxt",
+      "program": "${workspaceFolder}/scripts/dev.mjs",
+      "cwd": "${workspaceFolder}",
+      "outputCapture": "std",
+      "autoAttachChildProcesses": true,
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "client: chrome",
+      "url": "http://localhost:3000",
+      "port": 9222,
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "type": "msedge",
+      "request": "launch",
+      "name": "client: edge",
+      "url": "http://localhost:3000",
+      "port": 9223,
+      "webRoot": "${workspaceFolder}"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "fullstack: nuxt",
+      "configurations": ["server: nuxt", "client: chrome"],
+      "stopAll": true
+    }
+  ]
+}
