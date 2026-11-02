@@ -1,6 +1,12 @@
 import type { NavigationTarget } from '~~/shared/types/page-meta.types'
 
-interface HrefActionProps {
+export type ActionType = 'text' | 'link' | 'primary' | 'secondary' | 'tertiary'
+
+interface BaseActionProps {
+    type?: ActionType
+}
+
+interface HrefActionProps extends BaseActionProps {
     action?: never
     href: string
     target?: NavigationTarget
@@ -8,7 +14,7 @@ interface HrefActionProps {
     external?: boolean
 }
 
-interface ButtonActionProps {
+interface ButtonActionProps extends BaseActionProps {
     href?: never
     action: () => void
 }
