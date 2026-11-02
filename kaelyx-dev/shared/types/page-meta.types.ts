@@ -2,6 +2,8 @@ import 'nuxt/app'
 import 'vue-router'
 import type { ActionType } from './global.types'
 
+export type NavigationTarget = '_blank' | '_self' | '_parent' | '_top'
+
 export interface NavigationMeta {
     order?: number
     label?: string
@@ -16,6 +18,8 @@ export interface NavigationMeta {
 export interface NavigationNode extends Omit<NavigationMeta, 'visible'> {
     name: string
     path: string
+    target?: NavigationTarget
+    external?: boolean
 }
 
 declare module 'nuxt/app' {

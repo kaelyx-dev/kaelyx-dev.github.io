@@ -1,0 +1,31 @@
+@use 'sass:math';
+
+// ---------------------------------------------------------------------------
+// Shared settings and fluid helpers for typography.scss and spacing.scss.
+// Configure once, before anything else loads this module:
+// @use 'settings.defaults' with ($fluid-max: 1200px);
+// ---------------------------------------------------------------------------
+
+$root-font-size: 16px !default;
+
+// Viewport range over which sizes grow; below/above it they are clamped.
+$fluid-min: 500px !default;
+$fluid-max: 1000px !default;
+
+@function rem($px) {
+    @return math.div($px, $root-font-size) * 1rem;
+}
+
+// Linear interpolation between two px sizes across the fluid range.
+@function fluid($from, $to, $vmin: $fluid-min, $vmax: $fluid-max) {
+    @if $from == $to {
+        @return rem($from);
+    }
+
+    $slope: math.div($to - $from, $vmax - $vmin);
+    $intercept: $from - $slope * $vmin;
+    $lower: math.min($from, $to);
+    $upper: math.max($from, $to);
+
+    @return clamp(rem($lower), rem($intercept) + $slope * 100vw, rem($upper));
+}

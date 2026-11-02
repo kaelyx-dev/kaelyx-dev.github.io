@@ -1,0 +1,174 @@
+@use 'sass:map';
+@use 'sass:math';
+@use 'sass:meta';
+@use 'sass:string';
+@use 'settings.defaults' as settings;
+
+// ---------------------------------------------------------------------------
+// Fluid scale
+// ---------------------------------------------------------------------------
+
+// Base size and modular ratio at each end of the range.
+$type-scale: (
+    min: (base: 16px, ratio: 1.2),
+    max: (base: 18px, ratio: 1.414),
+) !default;
+
+@function step-size($step, $end) {
+    $scale: map.get($type-scale, $end);
+    @return map.get($scale, base) * math.pow(map.get($scale, ratio), $step);
+}
+
+@function fluid-step($step) {
+    @return settings.fluid(step-size($step, min), step-size($step, max));
+}
+
+// ---------------------------------------------------------------------------
+// Font sizes
+// Unitless value = step on the fluid scale; value with a unit = fixed size.
+// ---------------------------------------------------------------------------
+
+$font-size-prefix: 'fs-' !default;
+
+$font-size: (
+    'h1': 5,
+    'h2': 4,
+    'h3': 3,
+    'h4': 2,
+    'h5': 1,
+    'h6': 0.5,
+    'p1': 0.5,
+    'p2': 0,
+    'p3': -1,
+) !default;
+
+@function resolve-font-size($value) {
+    @if math.is-unitless($value) {
+        @return fluid-step($value);
+    }
+    @return $value;
+}
+
+@function font-size-prop($token) {
+    @return string.unquote('--#{$font-size-prefix}#{$token}');
+}
+
+@function font-size($size) {
+    @if map.has-key($font-size, $size) {
+        @return var(font-size-prop($size));
+    }
+    @if meta.type-of($size) == 'number' and not math.is-unitless($size) {
+        @return $size;
+    }
+    @error "Unknown font-size token: '#{$size}'. Valid tokens: #{map.keys($font-size)}, or pass a length (e.g. 18px).";
+}
+
+@mixin font-size($size) {
+    font-size: font-size($size);
+}
+
+@mixin font-size-properties($sizes: $font-size) {
+    @each $name, $value in $sizes {
+        #{font-size-prop($name)}: #{resolve-font-size($value)};
+    }
+}
+
+@mixin font-sizes($prefix: 'fontsize-', $sizes: $font-size) {
+    @each $name, $value in $sizes {
+        &--#{$prefix}#{$name} {
+            @include font-size($name);
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Font faces
+// ---------------------------------------------------------------------------
+
+$font-face-sources: () !default;
+
+$font-face: (
+    'styled': (Georgia, serif),
+    'alt':    (system-ui, sans-serif),
+    'body':   (system-ui, sans-serif),
+) !default;
+
+@mixin font-face-generator($sources: $font-face-sources) {
+    @each $key, $variant in $sources {
+        @font-face {
+            font-family: map.get($variant, family);
+            src: url('#{map.get($variant, file)}') format('woff2');
+            font-weight: map.get($variant, weight);
+            font-style: map.get($variant, style);
+            font-display: swap;
+        }
+    }
+}
+
+@function font-face($token) {
+    @if not map.has-key($font-face, $token) {
+        @error "Unknown font-face token: '#{$token}'. Valid tokens: #{map.keys($font-face)}.";
+    }
+    @return map.get($font-face, $token);
+}
+
+@mixin font-face($token) {
+    font-family: font-face($token);
+}
+
+// ---------------------------------------------------------------------------
+// Composite styles
+// ---------------------------------------------------------------------------
+
+$font: (
+    'title': (
+        font-face: 'styled',
+        font-size: 'h2',
+        font-weight: 600,
+        line-height: 1.1,
+    ),
+    'body': (
+        font-face: 'body',
+        font-size: 'p2',
+        font-weight: 400,
+        line-height: 1.5,
+    ),
+) !default;
+
+@function font-get($style) {
+    @if not map.has-key($font, $style) {
+        @error "Unknown font style: '#{$style}'. Valid styles: #{map.keys($font)}.";
+    }
+    @return map.get($font, $style);
+}
+
+@mixin font($style, $overrides: ()) {
+    @each $property, $value in map.merge(font-get($style), $overrides) {
+        @if $property == font-face {
+            @include font-face($value);
+        } @else if $property == font-size {
+            @include font-size($value);
+        } @else {
+            #{$property}: $value;
+        }
+    }
+}
+
+@mixin fonts() {
+    @each $name, $props in $font {
+        &--font-#{$name} {
+            @include font($name);
+        }
+    }
+}
+
+
+// ---------------------------------------------------------------------------
+// Default Tag Styling
+// ---------------------------------------------------------------------------
+
+h1 { @include font-size('h1'); }
+h2 { @include font-size('h2'); }
+h3 { @include font-size('h3'); }
+h4 { @include font-size('h4'); }
+p,span { @include font-size('p2'); }

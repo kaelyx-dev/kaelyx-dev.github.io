@@ -1,11 +1,18 @@
 @use '@themes/api' as theme;
+@use 'typography' as font;
+@use 'spacing' as space;
+@use 'reset';
+
+:root {
+  @include font.font-size-properties;
+  @include space.space-properties;
+}
 
 body {
   margin: 0;
   background: theme.colour(background);
   color: theme.colour(text);
-  font-family: system-ui, sans-serif;
-  line-height: 1.5;
+  @include font.font(body);
 }
 
 a {

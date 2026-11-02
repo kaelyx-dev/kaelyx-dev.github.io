@@ -1,0 +1,191 @@
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:math';
+@use 'sass:meta';
+@use 'sass:string';
+@use 'settings.defaults' as settings;
+
+// ---------------------------------------------------------------------------
+// Fluid scale
+// ---------------------------------------------------------------------------
+
+// Base spacing unit at each end of the range. Every token is a multiple of it.
+$space-base: (
+    min: 16px,
+    max: 20px,
+) !default;
+
+@function step-size($multiplier, $end) {
+    @return map.get($space-base, $end) * $multiplier;
+}
+
+// ---------------------------------------------------------------------------
+// Space tokens
+// Unitless value = multiplier of $space-base (fluid); value with a unit = fixed.
+// A (min: x, max: y) map = separate multipliers at each end, for tokens that
+// should grow faster or slower than the base.
+// ---------------------------------------------------------------------------
+
+$space-prefix: 'sp-' !default;
+
+$space: (
+    '3xs': 0.25,
+    '2xs': 0.5,
+    'xs':  0.75,
+    's':   1,
+    'm':   1.5,
+    'l':   2,
+    'xl':  3,
+    '2xl': 4,
+    '3xl': 6,
+) !default;
+
+// Pairs interpolate from one token at $fluid-min to another at $fluid-max,
+// e.g. 's-l' gives --sp-s-l. Use for large, dramatic shifts such as section
+// padding that is tight on mobile and generous on desktop.
+// auto = every smaller-to-larger combination of fluid tokens, in $space order.
+// A list such as (('s', 'l'), ('m', 'xl')) limits output to just those pairs.
+$space-pairs: auto !default;
+
+// Runtime multiplier applied wherever a token is used. Set the custom property
+// on any element to make that subtree denser or roomier without recompiling.
+// Applied at the point of use (not baked into --sp-*), because custom
+// properties on :root resolve var() there and would ignore subtree overrides.
+$space-density: true !default;
+$space-density-prop: --space-density !default;
+
+@function space-prop($token) {
+    @return string.unquote('--#{$space-prefix}#{$token}');
+}
+
+@function space-end($value, $end) {
+    @if meta.type-of($value) == 'map' {
+        @return step-size(map.get($value, $end), $end);
+    }
+    @if math.is-unitless($value) {
+        @return step-size($value, $end);
+    }
+    @return $value;
+}
+
+@function resolve-space($value) {
+    @if is-fixed($value) {
+        @return $value;
+    }
+    @return settings.fluid(space-end($value, min), space-end($value, max));
+}
+
+@function resolve-space-pair($from, $to) {
+    @return settings.fluid(
+        space-end(space-get($from), min),
+        space-end(space-get($to), max)
+    );
+}
+
+@function with-density($value) {
+    @if not $space-density {
+        @return $value;
+    }
+    @return calc(#{$value} * var(#{$space-density-prop}, 1));
+}
+
+@function is-fixed($value) {
+    @return meta.type-of($value) == 'number' and not math.is-unitless($value);
+}
+
+@function space-pair-list($tokens: $space, $pairs: $space-pairs) {
+    @if $pairs != auto {
+        @return $pairs;
+    }
+
+    // Fixed-length tokens have no min/max to interpolate between, so skip them.
+    $fluid: ();
+    @each $name, $value in $tokens {
+        @if not is-fixed($value) {
+            $fluid: list.append($fluid, $name, comma);
+        }
+    }
+
+    $result: ();
+    @for $i from 1 to list.length($fluid) {
+        @for $j from $i + 1 through list.length($fluid) {
+            $result: list.append($result, (list.nth($fluid, $i), list.nth($fluid, $j)), comma);
+        }
+    }
+    @return $result;
+}
+
+@function space-get($token) {
+    @if not map.has-key($space, $token) {
+        @error "Unknown space token: '#{$token}'. Valid tokens: #{map.keys($space)}.";
+    }
+    @return map.get($space, $token);
+}
+
+@function space-single($size) {
+    @if $size == 0 or $size == auto {
+        @return $size;
+    }
+    @if meta.type-of($size) == 'string' {
+        @if map.has-key($space, $size) {
+            $value: map.get($space, $size);
+            // Fixed-length tokens opt out of density, like they opt out of fluid.
+            @if is-fixed($value) {
+                @return var(space-prop($size));
+            }
+            @return with-density(var(space-prop($size)));
+        }
+        // Pair token, e.g. 's-l'.
+        @each $pair in space-pair-list() {
+            @if $size == '#{list.nth($pair, 1)}-#{list.nth($pair, 2)}' {
+                @return with-density(var(space-prop($size)));
+            }
+        }
+    }
+    @if meta.type-of($size) == 'number' and not math.is-unitless($size) {
+        @return $size;
+    }
+    @error "Unknown space token: '#{$size}'. Valid tokens: #{map.keys($space)}, a pair from $space-pairs (e.g. 's-l' — smaller token first), 0, auto, or a length (e.g. 12px).";
+}
+
+// Accepts a token, a length, or a space-separated list for shorthands:
+// space('m'), space(12px), space('s' 'l'), space(0 'm' 'xs').
+@function space($size) {
+    @if meta.type-of($size) == 'list' {
+        $values: ();
+        @each $item in $size {
+            $values: list.append($values, space-single($item), space);
+        }
+        @return $values;
+    }
+    @return space-single($size);
+}
+
+@function space-negative($size) {
+    @return calc(-1 * #{space-single($size)});
+}
+
+@mixin space($property, $size) {
+    #{$property}: space($size);
+}
+
+@mixin space-properties($tokens: $space, $pairs: $space-pairs) {
+    @each $name, $value in $tokens {
+        #{space-prop($name)}: #{resolve-space($value)};
+    }
+    @each $pair in space-pair-list($tokens, $pairs) {
+        $from: list.nth($pair, 1);
+        $to: list.nth($pair, 2);
+        #{space-prop('#{$from}-#{$to}')}: #{resolve-space-pair($from, $to)};
+    }
+}
+
+// Modifier classes for one property, e.g. inside .stack:
+// @include spaces(gap, 'gap-') -> .stack--gap-s, .stack--gap-m, ...
+@mixin spaces($property, $prefix, $tokens: $space) {
+    @each $name, $value in $tokens {
+        &--#{$prefix}#{$name} {
+            @include space($property, $name);
+        }
+    }
+}

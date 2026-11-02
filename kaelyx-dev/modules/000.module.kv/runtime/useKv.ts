@@ -44,5 +44,32 @@ export const useKv = () => {
         assignList(key, getList(key).filter(item => !remove.has(item)))
     }
 
-    return { kv, has, get, assign, getList, assignList, appendList, removeFromList }
+    // Keys are stored flat ('navigation.entry.test.path'), so an exact key returns its value and a
+    // prefix like 'navigation.entry' is rebuilt into a nested object from every key beneath it
+    const getFromPath = <T = unknown>(path: string, fallback?: T): T | undefined => {
+        if(has(path)) return kv.value[path] as T
+
+        const prefix = `${path}.`
+        const result: Record<string, unknown> = {}
+        let found = false
+
+        for(const [key, value] of Object.entries(kv.value)) {
+            if(!key.startsWith(prefix)) continue
+            found = true
+
+            const parts = key.slice(prefix.length).split('.')
+            const last = parts.pop()!
+            let node = result
+            for(const part of parts) {
+                // a key can be both a value and a parent (a.b = x, a.b.c = y); the parent wins
+                if(typeof node[part] !== 'object' || node[part] === null) node[part] = {}
+                node = node[part] as Record<string, unknown>
+            }
+            if(typeof node[last] !== 'object' || node[last] === null) node[last] = value
+        }
+
+        return found ? result as T : fallback
+    }
+
+    return { kv, has, get, assign, getList, assignList, appendList, removeFromList, getFromPath }
 }
