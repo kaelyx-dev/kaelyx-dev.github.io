@@ -8,6 +8,7 @@ import { parseConf } from '../000.module.kv/runtime/parse'
 import { checkThemeName, toLabel, toScheme, toThemeConfig, type ThemeConfig, type ThemeScheme } from './lib/config'
 import { readThemeFile } from './lib/theme-file'
 import { toColorSchemeMeta, toHeadScript } from './lib/head'
+import { toStylesRule } from './lib/styles'
 
 const THEME_DIR = 'assets/themes'
 const ATTRIBUTE = 'data-theme'
@@ -15,6 +16,7 @@ const ATTRIBUTE = 'data-theme'
 interface Theme {
   file: string
   scheme?: ThemeScheme
+  styles: boolean
 }
 
 export default defineNuxtModule({
@@ -48,7 +50,7 @@ export default defineNuxtModule({
 
         const replaced = themes.get(name.value)
         if (replaced) logger.info(`"${name.value}" from ${rel(path)} replaces ${rel(replaced.file)}`)
-        themes.set(name.value, { file: path, scheme: meta.value.scheme })
+        themes.set(name.value, { file: path, scheme: meta.value.scheme, styles: meta.value.styles })
       }
     }
 
@@ -112,6 +114,11 @@ export default defineNuxtModule({
           '  @include theme.tone-selectors;',
           '}',
           '',
+          '// Outside the layer, so a theme\'s own styles can override unlayered component styles',
+          ...ordered.flatMap((name, i) => themes.get(name)!.styles
+            ? [toStylesRule(name, `t${i}`, { attribute: ATTRIBUTE, fallback })]
+            : []),
+          '',
         ].join('\n')
       },
     })
@@ -172,11 +179,21 @@ export default defineNuxtModule({
 
     if (nuxt.options.dev) {
       nuxt.hook('builder:watch', async (event, relativePath) => {
-        if (event !== 'add' && event !== 'unlink') return
+        if (event !== 'add' && event !== 'unlink' && event !== 'change') return
         const path = resolve(nuxt.options.srcDir, relativePath)
         if (!path.endsWith('.scss') || !dirs.some(dir => path.startsWith(`${dir}/`))) return
 
-        logger.info(`${event} ${rel(path)}, restarting to update the theme list`)
+        if (event === 'change') {
+          // Edits inside a theme hot-reload through Sass; only adding or removing `styles` changes the sheet
+          const theme = [...themes.values()].find(theme => theme.file === path)
+          if (!theme) return
+          const meta = readThemeFile(await readFile(path, 'utf8'))
+          if (!meta.ok || meta.value.styles === theme.styles) return
+
+          logger.info(`${rel(path)} ${meta.value.styles ? 'added' : 'removed'} its styles mixin, restarting`)
+        } else {
+          logger.info(`${event} ${rel(path)}, restarting to update the theme list`)
+        }
         await nuxt.callHook('restart')
       })
     }

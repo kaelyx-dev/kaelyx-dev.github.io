@@ -1,5 +1,5 @@
 import type { RouteRecordNormalized } from "vue-router"
-import type { NavigationMeta, NavigationNode, NavigationTarget } from '~~/shared/types/page-meta.types'
+import type { NavigationMeta, NavigationNode } from '~~/shared/types/page-meta.types'
 import { omit } from '@kaelyx/ts-kit/object/omit'
 export const useNavigation = () => {
 
